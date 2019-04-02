@@ -8,7 +8,13 @@ This also demonstrates how to use the framework.
 
 ### Prepare environment
 
-First, you need copy `app.env.template` to `app.env` and set `TOKEN`
+Clone repo:
+
+```bash
+git clone https://github.com/vd2org/rocketgram-template.git
+```
+
+You need copy `app.env.template` to `app.env` and set `TOKEN`
 parameter to token taken from [BotFather](https://t.me/BotFather).
 Then you can run bot with one of following method.
 
@@ -23,6 +29,19 @@ set -a
 source app.env
 set +a
 python app/engine.py
+```
+
+### Run with pipenv
+
+Create new `venv` and install dependencies, then run your first bot:
+
+```bash
+pipenv install -r app/requirements.txt
+
+set -a
+source app.env
+set +a
+pipenv run python app/engine.py
 ```
 
 ### Run with docker
