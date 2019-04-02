@@ -1,1 +1,2 @@
 munch
+-e git+https://github.com/vd2org/rocketgram.git#egg=rocketgram
