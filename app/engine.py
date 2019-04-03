@@ -8,7 +8,12 @@ logger = logging.getLogger('minibots.engine')
 
 
 def main():
-    mode = os.environ.get('MODE', 'updates').lower().strip()
+    mode = os.environ.get('MODE')
+    if mode is None and 'HEROKU' in os.environ:
+        mode = 'heroku'
+
+    if mode not in ('updates', 'webhook', 'heroku'):
+        raise TypeError('MODE must be `updates` or `webhook` or `heroku`!')
 
     logging.basicConfig(format='%(asctime)s - %(levelname)-5s - %(name)-25s: %(message)s')
     logging.basicConfig(level=logging.ERROR)
@@ -24,7 +29,7 @@ def main():
 
     if mode == 'updates':
         rocketgram.run_updates(bot, drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
-    elif mode in ('webhook', 'heroku'):
+    else:
         if mode == 'heroku':
             port = os.environ['PORT']
         else:
@@ -34,8 +39,7 @@ def main():
                                os.environ.get('WEBHOOK_PATH', '/').strip(),
                                port=int(port),
                                drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
-    else:
-        raise TypeError('MODE must be `updates` or `webhook` or `heroku`!')
+
 
     logger.info('Bye!')
 
