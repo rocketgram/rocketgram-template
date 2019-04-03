@@ -23,12 +23,12 @@ def main():
     bot = mybot.get_bot(os.environ['TOKEN'].strip())
 
     if mode == 'updates':
-        rocketgram.run_updates(bot, drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0).strip())))
+        rocketgram.run_updates(bot, drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
     elif mode in ('webhook', 'heroku'):
         if mode == 'heroku':
             port = os.environ['PORT']
         else:
-            port = os.environ.get('WEBHOOK_PORT', 8080).strip()
+            port = os.environ.get('WEBHOOK_PORT', 8080)
         rocketgram.run_webhook(bot,
                                os.environ['WEBHOOK_URL'].strip(),
                                os.environ.get('WEBHOOK_PATH', '/').strip(),
