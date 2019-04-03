@@ -31,7 +31,7 @@ def main():
             port = os.environ.get('WEBHOOK_PORT', 8080)
         rocketgram.run_webhook(bot,
                                os.environ['WEBHOOK_URL'],
-                               os.environ['WEBHOOK_PATH'],
+                               os.environ.get('WEBHOOK_PATH', '/'),
                                port=int(port),
                                drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
     else:
