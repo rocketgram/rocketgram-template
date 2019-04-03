@@ -33,7 +33,7 @@ def main():
                                os.environ['WEBHOOK_URL'].strip(),
                                os.environ.get('WEBHOOK_PATH', '/').strip(),
                                port=int(port),
-                               drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0).strip())))
+                               drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
     else:
         raise TypeError('MODE must be `updates` or `webhook` or `heroku`!')
 
