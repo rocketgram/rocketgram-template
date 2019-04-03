@@ -57,8 +57,6 @@ Run following in console.
 Don't forget to change APP_NAME and YOUR_BOT_API_TOKEN parameters.
 
 ```bash
-pipenv install -r requirements.txt
-
 heroku apps:create --region eu APP_NAME
 
 heroku config:set TOKEN=YOUR_BOT_API_TOKEN
