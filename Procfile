@@ -1,1 +1,1 @@
-bot: python app/engine.py
+web: python app/engine.py
