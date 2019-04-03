@@ -1,6 +1,6 @@
 FROM python:3.7-alpine
 
-COPY app/requirements.txt /opt/
+COPY requirements.txt /opt/
 
 RUN apk update && \
     apk add --no-cache ca-certificates && \

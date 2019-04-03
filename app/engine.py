@@ -24,14 +24,18 @@ def main():
 
     if mode == 'updates':
         rocketgram.run_updates(bot, drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
-    elif mode == 'webhook':
+    elif mode in ('webhook', 'heroku'):
+        if mode == 'heroku':
+            port = os.environ['PORT']
+        else:
+            port = os.environ.get('WEBHOOK_PORT', 8080)
         rocketgram.run_webhook(bot,
                                os.environ['WEBHOOK_URL'],
                                os.environ['WEBHOOK_PATH'],
-                               port=int(os.environ.get('WEBHOOK_PORT', 8080)),
+                               port=int(port),
                                drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
     else:
-        raise TypeError('MODE must be `updates` or `webhook`!')
+        raise TypeError('MODE must be `updates` or `webhook` or `heroku`!')
 
     logger.info('Bye!')
 
