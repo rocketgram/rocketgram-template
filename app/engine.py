@@ -9,7 +9,7 @@ logger = logging.getLogger('minibots.engine')
 
 def main():
     mode = os.environ.get('MODE')
-    if mode is None and 'HEROKU' in os.environ:
+    if mode is None and 'DYNO' in os.environ:
         mode = 'heroku'
 
     if mode not in ('updates', 'webhook', 'heroku'):
