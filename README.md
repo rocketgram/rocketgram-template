@@ -23,7 +23,7 @@ Then you can run bot with one of following method.
 Create new `venv` and install dependencies, then run your first bot:
 
 ```bash
-python -m pip install -r app/requirements.txt
+python -m pip install -r requirements.txt
 
 set -a
 source app.env
@@ -36,7 +36,7 @@ python app/engine.py
 Create new `venv` and install dependencies, then run your first bot:
 
 ```bash
-pipenv install -r app/requirements.txt
+pipenv install -r requirements.txt
 
 set -a
 source app.env
@@ -53,5 +53,18 @@ docker run --env-file app.env --name rocketgram-template -d --restart unless-sto
 ```
 
 ### Run in Heroku
+Run following in console.
+Don't forget to change APP_NAME and YOUR_BOT_API_TOKEN parameters.
 
-TODO!
+```bash
+pipenv install -r requirements.txt
+
+heroku apps:create --region eu APP_NAME
+
+heroku config:set TOKEN=YOUR_BOT_API_TOKEN
+
+heroku config:set WEBHOOK_URL=https://APP_NAME.herokuapp.com/
+
+git push heroku master
+
+heroku ps:scale web=1
