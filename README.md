@@ -62,9 +62,9 @@ pipenv install -r requirements.txt
 heroku apps:create --region eu APP_NAME
 
 heroku config:set TOKEN=YOUR_BOT_API_TOKEN
-
 heroku config:set WEBHOOK_URL=https://APP_NAME.herokuapp.com/
 
 git push heroku master
 
 heroku ps:scale web=1
+```
