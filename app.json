@@ -18,17 +18,9 @@
       "description": "A secret key for bot.",
       "required": true
     },
-    "MODE": {
-      "description": "Select work mode.",
-      "value": "heroku"
-    },
     "WEBHOOK_URL": {
       "description": "Application domain.",
       "value": "https://rocketgram-template.herokuapp.com/"
-    },
-    "WEBHOOK_PATH": {
-      "description": "Application url.",
-      "value": "/"
     }
   }
 }
