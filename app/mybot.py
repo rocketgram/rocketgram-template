@@ -20,12 +20,25 @@ def get_bot(token: str):
 
     return bot
 
+@router.on_init
+def on_init(bot: Bot):
+    """This function called when bot starts. Place here any startup code."""
+
+    logger.info('I am starting!')
+
+@router.on_shutdown
+def on_shutdown(bot: Bot):
+    """This function called when bot stops. Place here any cleanup code."""
+
+    logger.info('I am going to sleep!')
+
 
 @router.before
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.update_type(UpdateType.callback_query)
 def before_callback_request(ctx: Context):
-    """This is preprocessor. All preprocessor will be called for every update."""
+    """This is preprocessor. All preprocessor will be called for every update with callback_query."""
+
     logger.info('Got new callback from %s: `%s`',
                 ctx.update.callback_query.user.user_id,
                 ctx.update.callback_query.data)
@@ -35,6 +48,8 @@ def before_callback_request(ctx: Context):
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.update_type(UpdateType.message)
 def before_message_request(ctx: Context):
+    """This is preprocessor. All preprocessor will be called for every update with message."""
+
     if ctx.update.message.message_type == MessageType.text:
         logger.info('Got new message from %s: `%s`', ctx.update.message.user.user_id, ctx.update.message.text)
     else:
