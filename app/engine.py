@@ -2,6 +2,9 @@
 import os
 
 import mybot
+import commands
+import keyboards
+import callbacks
 import rocketgram
 
 logger = logging.getLogger('minibots.engine')
@@ -39,7 +42,6 @@ def main():
                                os.environ.get('WEBHOOK_PATH', '/').strip(),
                                port=int(port),
                                drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
-
 
     logger.info('Bye!')
 
