@@ -13,7 +13,6 @@ def next_all(ctx: Context):
     return True
 
 
-# =========================================================================================
 @router.handler
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.command('/echo')
