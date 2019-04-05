@@ -152,7 +152,7 @@ async def enigma_act(ctx: Context):
         display = list(machine.machine.get_display())
         if len(display) < 4 and machine.rotors == 4:
             display.insert(0, machine.display[0])
-        display = ', '.join(display)
+        display = ' '.join(display)
 
         machine.input += letter
         machine.output += lamp
