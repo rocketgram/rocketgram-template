@@ -6,6 +6,7 @@ import commands
 import keyboards
 import callbacks
 import myenigma
+import echo
 import rocketgram
 
 logger = logging.getLogger('minibots.engine')
