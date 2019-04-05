@@ -16,7 +16,8 @@ REFLECTORS['A'] = 'EJMZALYXVBWFCRQUONTSPIKHGD'
 LETTERS_QWERTY = 'QWERTUIOASDFGHJKPYCVBNMLXZ'
 
 MSG = Munch()
-MSG.setup = """{setting}
+MSG.setup = """\
+{setting}
 
 <b>[{reflector}] {rotors}</b> / <b>{rings}</b>
 <b>{plugboard}</b>
