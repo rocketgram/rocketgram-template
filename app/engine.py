@@ -5,6 +5,7 @@ import mybot
 import commands
 import keyboards
 import callbacks
+import myenigma
 import rocketgram
 
 logger = logging.getLogger('minibots.engine')

@@ -40,7 +40,9 @@ def help_command(ctx: Context):
                       "\n"
                       "/simple_inline_keyboard - Shows simple inline keyboard\n"
                       "/arranged_inline_keyboard - Shows how to arrange inline keyboard\n"
-                      "/arranged_scheme_inline_keyboard - Shows how to arrange inline keyboard by scheme\n")
+                      "/arranged_scheme_inline_keyboard - Shows how to arrange inline keyboard by scheme\n"
+                      "\n"
+                      "/enigma - Enigma cypher machine")
 
     ctx.webhook_request(whr)
 
