@@ -23,7 +23,7 @@ async def inline(ctx: Context):
     await ctx.bot.send_message(ctx.update.message.user.user_id,
                                '🔹 Demo for inline mode.\n'
                                '\n'
-                               'Photos for demo taken from this site:'
+                               'Photos for demo taken from this site:\n'
                                'https://unsplash.com/creative-commons-images',
                                reply_markup=kb.render(), disable_web_page_preview=True)
 
