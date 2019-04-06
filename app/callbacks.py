@@ -130,11 +130,12 @@ async def reaction_on_simple_keyboard(ctx: Context):
         return
 
     if variant == 'prev':
-        await ctx.bot.answer_callback_query(ctx.update.callback_query.query_id, '🔹 Showing next page', show_alert=True)
+        await ctx.bot.answer_callback_query(ctx.update.callback_query.query_id, '🔹 Showing previous page',
+                                            show_alert=True)
         return
 
     if variant == 'next':
-        await ctx.bot.answer_callback_query(ctx.update.callback_query.query_id, '🔹 Showing previous page',
+        await ctx.bot.answer_callback_query(ctx.update.callback_query.query_id, '🔹 Showing next page',
                                             show_alert=True)
         return
 
