@@ -11,10 +11,12 @@ async def start_command(ctx: Context):
     await ctx.bot.send_message(ctx.update.message.user.user_id,
                                '🔹 Hello there. This is the demo bot for Rockegram framework.\n\n'
                                'See source code here:\n'
-                               'https://github.com/vd2org/rocketgram-template\n\n'
+                               'github.com/vd2org/rocketgram-template\n\n'
                                'And Rocketgram framework source here:\n'
-                               'https://github.com/vd2org/rocketgram\n\n'
-                               'You can list all commands by type /help.')
+                               'hgithub.com/vd2org/rocketgram\n\n'
+                               'You can list all commands by type /help.\n\n'
+                               'Support group: @RocketBots.',
+                               disable_web_page_preview=True)
 
 
 @router.handler
