@@ -1,8 +1,25 @@
 ﻿import logging
 import os
 
+import callbacks
+import commands
+import echo
+import keyboards
 import mybot
+import myenigma
 import rocketgram
+import unknown
+
+
+# avoid to remove "unused" imports by optimizers
+def fix_imports():
+    _ = callbacks
+    _ = commands
+    _ = echo
+    _ = keyboards
+    _ = myenigma
+    _ = unknown
+
 
 logger = logging.getLogger('minibots.engine')
 
@@ -30,14 +47,10 @@ def main():
     if mode == 'updates':
         rocketgram.run_updates(bot, drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
     else:
-        if mode == 'heroku':
-            port = os.environ['PORT']
-        else:
-            port = os.environ.get('WEBHOOK_PORT', 8080)
+        port = int(os.environ['PORT']) if mode == 'heroku' else int(os.environ.get('WEBHOOK_PORT', 8080))
         rocketgram.run_webhook(bot,
                                os.environ['WEBHOOK_URL'].strip(),
-                               os.environ.get('WEBHOOK_PATH', '/').strip(),
-                               port=int(port),
+                               os.environ.get('WEBHOOK_PATH', '/').strip(), port=port,
                                drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))),
                                webhook_remove=not mode == 'heroku')
 
