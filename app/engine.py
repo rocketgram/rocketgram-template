@@ -2,12 +2,6 @@
 import os
 
 import mybot
-import commands
-import keyboards
-import callbacks
-import myenigma
-import echo
-import unknown
 import rocketgram
 
 logger = logging.getLogger('minibots.engine')
@@ -44,7 +38,8 @@ def main():
                                os.environ['WEBHOOK_URL'].strip(),
                                os.environ.get('WEBHOOK_PATH', '/').strip(),
                                port=int(port),
-                               drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
+                               drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))),
+                               webhook_remove=not mode == 'heroku')
 
     logger.info('Bye!')
 
