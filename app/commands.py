@@ -44,11 +44,13 @@ def help_command(ctx: Context):
                       "/keyboard_contact - Shows keyboard with contact button.\n"
                       "/cancel - Removes current keyboard.\n"
                       "\n"
-                      "/simple_inline_keyboard - Shows simple inline keyboard\n"
-                      "/arranged_inline_keyboard - Shows how to arrange inline keyboard\n"
-                      "/arranged_scheme_inline_keyboard - Shows how to arrange inline keyboard by scheme\n"
+                      "/simple_inline_keyboard - Shows simple inline keyboard.\n"
+                      "/arranged_inline_keyboard - Shows how to arrange inline keyboard.\n"
+                      "/arranged_scheme_inline_keyboard - Shows how to arrange inline keyboard by scheme.\n"
                       "\n"
-                      "/echo - Waiting next request in same handler\n"
+                      "/echo - Waiting next request in same handler.\n"
+                      "\n"
+                      "/inline - Shows how to use inline mode.\n"
                       "\n"
                       "/enigma - Enigma cypher machine")
 

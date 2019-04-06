@@ -4,6 +4,7 @@ import os
 import callbacks
 import commands
 import echo
+import inline
 import keyboards
 import mybot
 import myenigma
@@ -18,6 +19,7 @@ def fix_imports():
     _ = echo
     _ = keyboards
     _ = myenigma
+    _ = inline
     _ = unknown
 
 
