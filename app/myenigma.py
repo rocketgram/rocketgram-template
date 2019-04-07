@@ -71,6 +71,8 @@ def enigma_kb(estat_id, cmd='enigma', pb=''):
         kb.callback('RUN ▶️', f'{cmd} {estat_id} run none')
     elif cmd != 'enigma':
         kb.callback('NEXT ▶️', f'{cmd} {estat_id} done none')
+    else:
+        kb.callback('⬅️ BKSP', f'{cmd} {estat_id} bksp none')
 
     return kb.arrange_simple(8).render()
 
@@ -133,7 +135,9 @@ def enigma_cmd(ctx: Context):
 async def enigma_act(ctx: Context):
     estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if estat_id not in ctx.bot.globals.enigmas:
+    estat = ctx.bot.globals.enigmas.get(estat_id)
+
+    if estat is None:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
         whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
@@ -142,8 +146,6 @@ async def enigma_act(ctx: Context):
 
     whr = AnswerCallbackQuery(ctx.update.callback_query.query_id)
     ctx.webhook_request(whr)
-
-    estat = ctx.bot.globals.enigmas[estat_id]
 
     if command == 'set':
         estat.input = ''
@@ -171,7 +173,12 @@ async def enigma_act(ctx: Context):
 
     machine.set_display(''.join(estat.display))
 
-    estat.input += letter
+    if command == 'bksp':
+        if not len(estat.input):
+            return
+        estat.input = estat.input[:-1]
+    else:
+        estat.input += letter
 
     inp = ''.join([l if (n+1) % 5 else l+' ' for n, l in enumerate(estat.input)])
     out = ''.join([l if (n+1) % 5 else l+' ' for n, l in enumerate(machine.process_text(estat.input))])
@@ -202,7 +209,9 @@ async def enigma_act(ctx: Context):
 async def enigma_setup_display(ctx: Context):
     estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if estat_id not in ctx.bot.globals.enigmas:
+    estat = ctx.bot.globals.enigmas.get(estat_id)
+
+    if estat is None:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
         whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
@@ -211,8 +220,6 @@ async def enigma_setup_display(ctx: Context):
 
     whr = AnswerCallbackQuery(ctx.update.callback_query.query_id)
     ctx.webhook_request(whr)
-
-    estat = ctx.bot.globals.enigmas[estat_id]
 
     if command == 'letter':
         if letter not in KEYBOARD_CHARS:
@@ -259,14 +266,14 @@ async def enigma_setup_display(ctx: Context):
 async def enigma_setup_plugboard(ctx: Context):
     estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if estat_id not in ctx.bot.globals.enigmas:
+    estat = ctx.bot.globals.enigmas.get(estat_id)
+
+    if estat is None:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
         whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
         ctx.webhook_request(whr)
         return
-
-    estat = ctx.bot.globals.enigmas[estat_id]
 
     if command == 'letter':
         if letter not in KEYBOARD_CHARS:
@@ -338,7 +345,9 @@ async def enigma_setup_plugboard(ctx: Context):
 async def enigma_setup_rings(ctx: Context):
     estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if estat_id not in ctx.bot.globals.enigmas:
+    estat = ctx.bot.globals.enigmas.get(estat_id)
+
+    if estat is None:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
         whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
@@ -347,8 +356,6 @@ async def enigma_setup_rings(ctx: Context):
 
     whr = AnswerCallbackQuery(ctx.update.callback_query.query_id)
     ctx.webhook_request(whr)
-
-    estat = ctx.bot.globals.enigmas[estat_id]
 
     if command == 'letter':
         if letter not in KEYBOARD_CHARS:
@@ -397,7 +404,9 @@ async def enigma_setup_rings(ctx: Context):
 async def enigma_setup_rotors(ctx: Context):
     estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if estat_id not in ctx.bot.globals.enigmas:
+    estat = ctx.bot.globals.enigmas.get(estat_id)
+
+    if estat is None:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
         whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
@@ -406,8 +415,6 @@ async def enigma_setup_rotors(ctx: Context):
 
     whr = AnswerCallbackQuery(ctx.update.callback_query.query_id)
     ctx.webhook_request(whr)
-
-    estat = ctx.bot.globals.enigmas[estat_id]
 
     if command == 'rotor':
         if letter not in ROTORS.keys():
