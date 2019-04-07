@@ -2,7 +2,7 @@
 from functools import lru_cache
 from secrets import token_urlsafe
 
-from enigma.machine import EnigmaMachine, KEYBOARD_CHARS
+from enigma.machine import KEYBOARD_CHARS, EnigmaMachine
 from enigma.rotors.data import REFLECTORS, ROTORS
 from munch import Munch
 
@@ -23,10 +23,10 @@ MSG.setup = """\
 <b>{plugboard}</b>
 <b>{idisplay}</b>"""
 
-MSG.setup_rotors = "Machine rotors setting:"
-MSG.setup_rings = "Machine rings setting:"
-MSG.setup_plugboard = "Machine plugboard setting:"
-MSG.setup_display = "Machine display setting:"
+MSG.setup_rotors = "Machine <b>rotors</b> setting:"
+MSG.setup_rings = "Machine <b>rings</b> setting:"
+MSG.setup_plugboard = "Machine <b>plugboard</b> setting:"
+MSG.setup_display = "Machine <b>display</b> setting:"
 
 MSG.enigma = """\
 <b>{display}</b>
@@ -106,13 +106,12 @@ def enigma_cmd(ctx: Context):
 
     estat.input = ''
     estat.output = ''
-    estat.rotors = 3
-    estat.rotors_list = ['I', 'II', 'III']
-    estat.rings_list = ['A', 'A', 'A']
-    estat.reflector = 'A'
+    estat.rotors = 4
+    estat.rotors_list = ['Beta', 'I', 'II', 'III']
+    estat.rings_list = ['A', 'A', 'A', 'A']
+    estat.reflector = 'C-Thin'
     estat.plugboard = []
-    estat.display = ['A', 'A', 'A']
-    estat.lcnt = 0
+    estat.display = ['A', 'A', 'A', 'A']
 
     m = MSG.setup.format(setting=MSG.setup_rotors,
                          display=' '.join(estat.display),
@@ -146,32 +145,8 @@ async def enigma_act(ctx: Context):
 
     estat = ctx.bot.globals.enigmas[estat_id]
 
-    display = ''
-
-    if command == 'letter':
-        lamp = estat.machine.key_press(letter)
-        display = list(estat.machine.get_display())
-        if len(display) < 4 and estat.rotors == 4:
-            display.insert(0, estat.display[0])
-        display = ' '.join(display)
-
-        estat.input += letter
-        estat.output += lamp
-        estat.lcnt += 1
-
-        if estat.lcnt >= 5:
-            estat.input += ' '
-            estat.output += ' '
-            estat.lcnt = 0
-
-        if len(estat.input) > 3800:
-            estat.input = estat.input[-3800:]
-            estat.output = estat.output[-3800:]
-
     if command == 'set':
         estat.input = ''
-        estat.output = ''
-        estat.lcnt = 0
 
         m = MSG.setup.format(setting=MSG.setup_display,
                              display=' '.join(estat.display),
@@ -188,9 +163,27 @@ async def enigma_act(ctx: Context):
                                         reply_markup=kb)
         return
 
-    m = MSG.enigma.format(input=estat.input,
-                          display=display,
-                          output=estat.output,
+    machine = EnigmaMachine.from_key_sheet(
+        rotors=estat.rotors_list,
+        reflector=estat.reflector,
+        ring_settings=' '.join(estat.rings_list),
+        plugboard_settings=' '.join(estat.plugboard))
+
+    machine.set_display(''.join(estat.display))
+
+    estat.input += letter
+
+    inp = ''.join([l if (n+1) % 5 else l+' ' for n, l in enumerate(estat.input)])
+    out = ''.join([l if (n+1) % 5 else l+' ' for n, l in enumerate(machine.process_text(estat.input))])
+
+    display = list(machine.get_display())
+    if len(display) < 4 and estat.rotors == 4:
+        display.insert(0, estat.display[0])
+    display = ' '.join(display)
+
+    m = MSG.enigma.format(display=display,
+                          input=inp,
+                          output=out,
                           reflector=estat.reflector,
                           rotors=' '.join(estat.rotors_list),
                           rings=' '.join(estat.rings_list),
@@ -231,14 +224,6 @@ async def enigma_setup_display(ctx: Context):
             return
 
     if command == 'run':
-        estat.machine = EnigmaMachine.from_key_sheet(
-            rotors=estat.rotors_list,
-            reflector=estat.reflector,
-            ring_settings=' '.join(estat.rings_list),
-            plugboard_settings=' '.join(estat.plugboard))
-
-        estat.machine.set_display(''.join(estat.display))
-
         m = MSG.enigma.format(input=estat.input,
                               display=' '.join(estat.display),
                               output=estat.output,
@@ -375,7 +360,6 @@ async def enigma_setup_rings(ctx: Context):
             return
 
     if command == 'done':
-
         m = MSG.setup.format(setting=MSG.setup_plugboard,
                              display=' '.join(estat.display),
                              reflector=estat.reflector,
