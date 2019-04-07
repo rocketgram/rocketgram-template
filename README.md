@@ -1,7 +1,7 @@
-# Template of bot with RocketGram
+# Template of bot with Rocketgram
 
 This is template repo for using to create and run your first bot with
-[RocketGram framework](https://github.com/vd2org/rocketgram).
+[Rocketgram framework](https://github.com/vd2org/rocketgram).
 This also demonstrates how to use the framework.
 
 ## Run your first bot
