@@ -39,7 +39,7 @@ Machine initial settings:
 <b>{idisplay}</b>"""
 
 MSG.plugboard_empty = "Plugboard empty"
-MSG.expiried = "Message is expired! Create new one!"
+MSG.expired = "Message is expired! Create new one!"
 MSG.plugboard_error = "Plugboard must contains pairs of unique letters."
 
 logger = logging.getLogger('enigma')
@@ -51,42 +51,42 @@ def init(bot: Bot):
 
 
 @lru_cache(128)
-def enigma_kb(machine_id, cmd='enigma', pb=''):
+def enigma_kb(estat_id, cmd='enigma', pb=''):
     kb = InlineKeyboard()
 
     for c in LETTERS_QWERTY[:-2]:
         ch = c if c not in pb else '*'
-        kb.callback(ch, f'{cmd} {machine_id} letter {c}')
+        kb.callback(ch, f'{cmd} {estat_id} letter {c}')
 
     if cmd == 'enigma-plugboard':
-        kb.callback('✖️ DEL', f'{cmd} {machine_id} del none')
+        kb.callback('✖️ DEL', f'{cmd} {estat_id} del none')
     if cmd == 'enigma':
-        kb.callback('⏪ SET', f'{cmd} {machine_id} set none')
+        kb.callback('⏪ SET', f'{cmd} {estat_id} set none')
 
     for c in LETTERS_QWERTY[-2:]:
         ch = c if c not in pb else '*'
-        kb.callback(ch, f'{cmd} {machine_id} letter {c}')
+        kb.callback(ch, f'{cmd} {estat_id} letter {c}')
 
     if cmd == 'enigma-display':
-        kb.callback('RUN ▶️', f'{cmd} {machine_id} run none')
+        kb.callback('RUN ▶️', f'{cmd} {estat_id} run none')
     elif cmd != 'enigma':
-        kb.callback('NEXT ▶️', f'{cmd} {machine_id} done none')
+        kb.callback('NEXT ▶️', f'{cmd} {estat_id} done none')
 
     return kb.arrange_simple(8).render()
 
 
-def rotors_kb(machine_id):
+def rotors_kb(estat_id):
     kb = InlineKeyboard()
 
     for r in ROTORS.keys():
-        kb.callback(r, f'enigma-rotors {machine_id} rotor {r}')
+        kb.callback(r, f'enigma-rotors {estat_id} rotor {r}')
 
     for r in sorted(REFLECTORS.keys()):
-        kb.callback(r, f'enigma-rotors {machine_id} reflector {r}')
+        kb.callback(r, f'enigma-rotors {estat_id} reflector {r}')
 
-    kb.callback('3-rotors', f'enigma-rotors {machine_id} 3rotors none')
-    kb.callback('4-rotors', f'enigma-rotors {machine_id} 4rotors none')
-    kb.callback('NEXT ▶️', f'enigma-rotors {machine_id} done none')
+    kb.callback('3-rotors', f'enigma-rotors {estat_id} 3rotors none')
+    kb.callback('4-rotors', f'enigma-rotors {estat_id} 4rotors none')
+    kb.callback('NEXT ▶️', f'enigma-rotors {estat_id} done none')
 
     return kb.arrange_simple(5).render()
 
@@ -101,27 +101,27 @@ def enigma_cmd(ctx: Context):
         if new_id not in ctx.bot.globals.enigmas:
             break
 
-    machine = Munch()
-    ctx.bot.globals.enigmas[new_id] = machine
+    estat = Munch()
+    ctx.bot.globals.enigmas[new_id] = estat
 
-    machine.input = ''
-    machine.output = ''
-    machine.rotors = 3
-    machine.rotors_list = ['I', 'II', 'III']
-    machine.rings_list = ['A', 'A', 'A']
-    machine.reflector = 'A'
-    machine.plugboard = []
-    machine.display = ['A', 'A', 'A']
-    machine.lcnt = 0
+    estat.input = ''
+    estat.output = ''
+    estat.rotors = 3
+    estat.rotors_list = ['I', 'II', 'III']
+    estat.rings_list = ['A', 'A', 'A']
+    estat.reflector = 'A'
+    estat.plugboard = []
+    estat.display = ['A', 'A', 'A']
+    estat.lcnt = 0
 
     m = MSG.setup.format(setting=MSG.setup_rotors,
-                         display=' '.join(machine.display),
-                         reflector=machine.reflector,
-                         rotors=' '.join(machine.rotors_list),
-                         rings=' '.join(machine.rings_list),
-                         plugboard=' '.join(machine.plugboard) if len(
-                             machine.plugboard) else MSG.plugboard_empty,
-                         idisplay=' '.join(machine.display))
+                         display=' '.join(estat.display),
+                         reflector=estat.reflector,
+                         rotors=' '.join(estat.rotors_list),
+                         rings=' '.join(estat.rings_list),
+                         plugboard=' '.join(estat.plugboard) if len(
+                             estat.plugboard) else MSG.plugboard_empty,
+                         idisplay=' '.join(estat.display))
 
     whr = SendMessage(ctx.update.message.chat.chat_id, m, reply_markup=rotors_kb(new_id))
     ctx.webhook_request(whr)
@@ -132,74 +132,74 @@ def enigma_cmd(ctx: Context):
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma')
 async def enigma_act(ctx: Context):
-    machine_id, command, letter = ctx.update.callback_query.data.split()[1:]
+    estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if machine_id not in ctx.bot.globals.enigmas:
+    if estat_id not in ctx.bot.globals.enigmas:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
-        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expiried)
+        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
         ctx.webhook_request(whr)
         return
 
     whr = AnswerCallbackQuery(ctx.update.callback_query.query_id)
     ctx.webhook_request(whr)
 
-    machine = ctx.bot.globals.enigmas[machine_id]
+    estat = ctx.bot.globals.enigmas[estat_id]
 
     display = ''
 
     if command == 'letter':
-        lamp = machine.machine.key_press(letter)
-        display = list(machine.machine.get_display())
-        if len(display) < 4 and machine.rotors == 4:
-            display.insert(0, machine.display[0])
+        lamp = estat.machine.key_press(letter)
+        display = list(estat.machine.get_display())
+        if len(display) < 4 and estat.rotors == 4:
+            display.insert(0, estat.display[0])
         display = ' '.join(display)
 
-        machine.input += letter
-        machine.output += lamp
-        machine.lcnt += 1
+        estat.input += letter
+        estat.output += lamp
+        estat.lcnt += 1
 
-        if machine.lcnt >= 5:
-            machine.input += ' '
-            machine.output += ' '
-            machine.lcnt = 0
+        if estat.lcnt >= 5:
+            estat.input += ' '
+            estat.output += ' '
+            estat.lcnt = 0
 
-        if len(machine.input) > 3800:
-            machine.input = machine.input[-3800:]
-            machine.output = machine.output[-3800:]
+        if len(estat.input) > 3800:
+            estat.input = estat.input[-3800:]
+            estat.output = estat.output[-3800:]
 
     if command == 'set':
-        machine.input = ''
-        machine.output = ''
-        machine.lcnt = 0
+        estat.input = ''
+        estat.output = ''
+        estat.lcnt = 0
 
         m = MSG.setup.format(setting=MSG.setup_display,
-                             display=' '.join(machine.display),
-                             reflector=machine.reflector,
-                             rotors=' '.join(machine.rotors_list),
-                             rings=' '.join(machine.rings_list),
-                             plugboard=' '.join(machine.plugboard) if len(
-                                 machine.plugboard) else MSG.plugboard_empty,
-                             idisplay=' '.join(machine.display))
+                             display=' '.join(estat.display),
+                             reflector=estat.reflector,
+                             rotors=' '.join(estat.rotors_list),
+                             rings=' '.join(estat.rings_list),
+                             plugboard=' '.join(estat.plugboard) if len(
+                                 estat.plugboard) else MSG.plugboard_empty,
+                             idisplay=' '.join(estat.display))
 
-        kb = enigma_kb(machine_id, 'enigma-display')
+        kb = enigma_kb(estat_id, 'enigma-display')
         await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                         message_id=ctx.update.callback_query.message.message_id, text=m,
                                         reply_markup=kb)
         return
 
-    m = MSG.enigma.format(input=machine.input,
+    m = MSG.enigma.format(input=estat.input,
                           display=display,
-                          output=machine.output,
-                          reflector=machine.reflector,
-                          rotors=' '.join(machine.rotors_list),
-                          rings=' '.join(machine.rings_list),
-                          plugboard=' '.join(machine.plugboard) if len(machine.plugboard) else MSG.plugboard_empty,
-                          idisplay=' '.join(machine.display))
+                          output=estat.output,
+                          reflector=estat.reflector,
+                          rotors=' '.join(estat.rotors_list),
+                          rings=' '.join(estat.rings_list),
+                          plugboard=' '.join(estat.plugboard) if len(estat.plugboard) else MSG.plugboard_empty,
+                          idisplay=' '.join(estat.display))
 
     await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                     message_id=ctx.update.callback_query.message.message_id, text=m,
-                                    reply_markup=enigma_kb(machine_id))
+                                    reply_markup=enigma_kb(estat_id))
 
 
 # =========================================================================================
@@ -207,61 +207,61 @@ async def enigma_act(ctx: Context):
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma-display')
 async def enigma_setup_display(ctx: Context):
-    machine_id, command, letter = ctx.update.callback_query.data.split()[1:]
+    estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if machine_id not in ctx.bot.globals.enigmas:
+    if estat_id not in ctx.bot.globals.enigmas:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
-        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expiried)
+        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
         ctx.webhook_request(whr)
         return
 
     whr = AnswerCallbackQuery(ctx.update.callback_query.query_id)
     ctx.webhook_request(whr)
 
-    machine = ctx.bot.globals.enigmas[machine_id]
+    estat = ctx.bot.globals.enigmas[estat_id]
 
     if command == 'letter':
         if letter not in KEYBOARD_CHARS:
             return
-        t = list(machine.display)
-        machine.display.pop(0)
-        machine.display.append(letter)
-        if t == machine.display:
+        t = list(estat.display)
+        estat.display.pop(0)
+        estat.display.append(letter)
+        if t == estat.display:
             return
 
     if command == 'run':
-        machine.machine = EnigmaMachine.from_key_sheet(
-            rotors=machine.rotors_list,
-            reflector=machine.reflector,
-            ring_settings=' '.join(machine.rings_list),
-            plugboard_settings=' '.join(machine.plugboard))
+        estat.machine = EnigmaMachine.from_key_sheet(
+            rotors=estat.rotors_list,
+            reflector=estat.reflector,
+            ring_settings=' '.join(estat.rings_list),
+            plugboard_settings=' '.join(estat.plugboard))
 
-        machine.machine.set_display(''.join(machine.display))
+        estat.machine.set_display(''.join(estat.display))
 
-        m = MSG.enigma.format(input=machine.input,
-                              display=' '.join(machine.display),
-                              output=machine.output,
-                              reflector=machine.reflector,
-                              rotors=' '.join(machine.rotors_list),
-                              rings=' '.join(machine.rings_list),
-                              plugboard=' '.join(machine.plugboard) if len(machine.plugboard) else MSG.plugboard_empty,
-                              idisplay=' '.join(machine.display))
+        m = MSG.enigma.format(input=estat.input,
+                              display=' '.join(estat.display),
+                              output=estat.output,
+                              reflector=estat.reflector,
+                              rotors=' '.join(estat.rotors_list),
+                              rings=' '.join(estat.rings_list),
+                              plugboard=' '.join(estat.plugboard) if len(estat.plugboard) else MSG.plugboard_empty,
+                              idisplay=' '.join(estat.display))
         await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                         message_id=ctx.update.callback_query.message.message_id, text=m,
-                                        reply_markup=enigma_kb(machine_id))
+                                        reply_markup=enigma_kb(estat_id))
         return
 
     m = MSG.setup.format(setting=MSG.setup_display,
-                         display=' '.join(machine.display),
-                         reflector=machine.reflector,
-                         rotors=' '.join(machine.rotors_list),
-                         rings=' '.join(machine.rings_list),
-                         plugboard=' '.join(machine.plugboard) if len(
-                             machine.plugboard) else MSG.plugboard_empty,
-                         idisplay=' '.join(machine.display))
+                         display=' '.join(estat.display),
+                         reflector=estat.reflector,
+                         rotors=' '.join(estat.rotors_list),
+                         rings=' '.join(estat.rings_list),
+                         plugboard=' '.join(estat.plugboard) if len(
+                             estat.plugboard) else MSG.plugboard_empty,
+                         idisplay=' '.join(estat.display))
 
-    kb = enigma_kb(machine_id, 'enigma-display')
+    kb = enigma_kb(estat_id, 'enigma-display')
     await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                     message_id=ctx.update.callback_query.message.message_id,
                                     text=m, reply_markup=kb)
@@ -272,78 +272,76 @@ async def enigma_setup_display(ctx: Context):
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma-plugboard')
 async def enigma_setup_plugboard(ctx: Context):
-    machine_id, command, letter = ctx.update.callback_query.data.split()[1:]
+    estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if machine_id not in ctx.bot.globals.enigmas:
+    if estat_id not in ctx.bot.globals.enigmas:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
-        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expiried)
+        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
         ctx.webhook_request(whr)
         return
 
-    machine = ctx.bot.globals.enigmas[machine_id]
+    estat = ctx.bot.globals.enigmas[estat_id]
 
     if command == 'letter':
         if letter not in KEYBOARD_CHARS:
             return
 
-        l = ''.join(machine.plugboard)
-
-        if letter in l:
+        if letter in estat.plugboard:
             whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.plugboard_error)
             ctx.webhook_request(whr)
             return
 
-        if len(machine.plugboard) < 1:
-            machine.plugboard.append('')
+        if len(estat.plugboard) < 1:
+            estat.plugboard.append('')
 
-        if len(machine.plugboard[-1]) == 2:
-            machine.plugboard.append('')
+        if len(estat.plugboard[-1]) == 2:
+            estat.plugboard.append('')
 
-        machine.plugboard[-1] += letter
+        estat.plugboard[-1] += letter
 
-        if len(machine.plugboard) > 10:
-            machine.plugboard.pop(0)
+        if len(estat.plugboard) > 10:
+            estat.plugboard.pop(0)
 
     if command == 'del':
-        if len(machine.plugboard) < 1:
+        if len(estat.plugboard) < 1:
             return
-        machine.plugboard.pop(-1)
+        estat.plugboard.pop(-1)
 
     whr = AnswerCallbackQuery(ctx.update.callback_query.query_id)
     ctx.webhook_request(whr)
 
     if command == 'done':
-        if len(machine.plugboard) > 0 and len(machine.plugboard[-1]) < 2:
+        if len(estat.plugboard) > 0 and len(estat.plugboard[-1]) < 2:
             whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.plugboard_error)
             ctx.webhook_request(whr)
             return
 
         m = MSG.setup.format(setting=MSG.setup_display,
-                             display=' '.join(machine.display),
-                             reflector=machine.reflector,
-                             rotors=' '.join(machine.rotors_list),
-                             rings=' '.join(machine.rings_list),
-                             plugboard=' '.join(machine.plugboard) if len(
-                                 machine.plugboard) else MSG.plugboard_empty,
-                             idisplay=' '.join(machine.display))
+                             display=' '.join(estat.display),
+                             reflector=estat.reflector,
+                             rotors=' '.join(estat.rotors_list),
+                             rings=' '.join(estat.rings_list),
+                             plugboard=' '.join(estat.plugboard) if len(
+                                 estat.plugboard) else MSG.plugboard_empty,
+                             idisplay=' '.join(estat.display))
 
-        kb = enigma_kb(machine_id, 'enigma-display')
+        kb = enigma_kb(estat_id, 'enigma-display')
         await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                         message_id=ctx.update.callback_query.message.message_id,
                                         text=m, reply_markup=kb)
         return
 
     m = MSG.setup.format(setting=MSG.setup_plugboard,
-                         display=' '.join(machine.display),
-                         reflector=machine.reflector,
-                         rotors=' '.join(machine.rotors_list),
-                         rings=' '.join(machine.rings_list),
-                         plugboard=' '.join(machine.plugboard) if len(
-                             machine.plugboard) else MSG.plugboard_empty,
-                         idisplay=' '.join(machine.display))
+                         display=' '.join(estat.display),
+                         reflector=estat.reflector,
+                         rotors=' '.join(estat.rotors_list),
+                         rings=' '.join(estat.rings_list),
+                         plugboard=' '.join(estat.plugboard) if len(
+                             estat.plugboard) else MSG.plugboard_empty,
+                         idisplay=' '.join(estat.display))
 
-    kb = enigma_kb(machine_id, 'enigma-plugboard', ''.join(machine.plugboard))
+    kb = enigma_kb(estat_id, 'enigma-plugboard', ''.join(estat.plugboard))
     await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                     message_id=ctx.update.callback_query.message.message_id, text=m, reply_markup=kb)
 
@@ -353,56 +351,56 @@ async def enigma_setup_plugboard(ctx: Context):
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma-rings')
 async def enigma_setup_rings(ctx: Context):
-    machine_id, command, letter = ctx.update.callback_query.data.split()[1:]
+    estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if machine_id not in ctx.bot.globals.enigmas:
+    if estat_id not in ctx.bot.globals.enigmas:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
-        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expiried)
+        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
         ctx.webhook_request(whr)
         return
 
     whr = AnswerCallbackQuery(ctx.update.callback_query.query_id)
     ctx.webhook_request(whr)
 
-    machine = ctx.bot.globals.enigmas[machine_id]
+    estat = ctx.bot.globals.enigmas[estat_id]
 
     if command == 'letter':
         if letter not in KEYBOARD_CHARS:
             return
-        t = list(machine.rings_list)
-        machine.rings_list.pop(0)
-        machine.rings_list.append(letter)
-        if t == machine.rings_list:
+        t = list(estat.rings_list)
+        estat.rings_list.pop(0)
+        estat.rings_list.append(letter)
+        if t == estat.rings_list:
             return
 
     if command == 'done':
 
         m = MSG.setup.format(setting=MSG.setup_plugboard,
-                             display=' '.join(machine.display),
-                             reflector=machine.reflector,
-                             rotors=' '.join(machine.rotors_list),
-                             rings=' '.join(machine.rings_list),
-                             plugboard=' '.join(machine.plugboard) if len(
-                                 machine.plugboard) else MSG.plugboard_empty,
-                             idisplay=' '.join(machine.display))
+                             display=' '.join(estat.display),
+                             reflector=estat.reflector,
+                             rotors=' '.join(estat.rotors_list),
+                             rings=' '.join(estat.rings_list),
+                             plugboard=' '.join(estat.plugboard) if len(
+                                 estat.plugboard) else MSG.plugboard_empty,
+                             idisplay=' '.join(estat.display))
 
-        kb = enigma_kb(machine_id, 'enigma-plugboard')
+        kb = enigma_kb(estat_id, 'enigma-plugboard')
         await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                         message_id=ctx.update.callback_query.message.message_id,
                                         text=m, reply_markup=kb)
         return
 
     m = MSG.setup.format(setting=MSG.setup_rings,
-                         display=' '.join(machine.display),
-                         reflector=machine.reflector,
-                         rotors=' '.join(machine.rotors_list),
-                         rings=' '.join(machine.rings_list),
-                         plugboard=' '.join(machine.plugboard) if len(
-                             machine.plugboard) else MSG.plugboard_empty,
-                         idisplay=' '.join(machine.display))
+                         display=' '.join(estat.display),
+                         reflector=estat.reflector,
+                         rotors=' '.join(estat.rotors_list),
+                         rings=' '.join(estat.rings_list),
+                         plugboard=' '.join(estat.plugboard) if len(
+                             estat.plugboard) else MSG.plugboard_empty,
+                         idisplay=' '.join(estat.display))
 
-    kb = enigma_kb(machine_id, 'enigma-rings')
+    kb = enigma_kb(estat_id, 'enigma-rings')
     await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                     message_id=ctx.update.callback_query.message.message_id,
                                     text=m, reply_markup=kb)
@@ -413,79 +411,79 @@ async def enigma_setup_rings(ctx: Context):
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma-rotors')
 async def enigma_setup_rotors(ctx: Context):
-    machine_id, command, letter = ctx.update.callback_query.data.split()[1:]
+    estat_id, command, letter = ctx.update.callback_query.data.split()[1:]
 
-    if machine_id not in ctx.bot.globals.enigmas:
+    if estat_id not in ctx.bot.globals.enigmas:
         await ctx.bot.edit_message_reply_markup(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                                 message_id=ctx.update.callback_query.message.message_id)
-        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expiried)
+        whr = AnswerCallbackQuery(ctx.update.callback_query.query_id, MSG.expired)
         ctx.webhook_request(whr)
         return
 
     whr = AnswerCallbackQuery(ctx.update.callback_query.query_id)
     ctx.webhook_request(whr)
 
-    machine = ctx.bot.globals.enigmas[machine_id]
+    estat = ctx.bot.globals.enigmas[estat_id]
 
     if command == 'rotor':
         if letter not in ROTORS.keys():
             return
-        t = list(machine.rotors_list)
-        machine.rotors_list.pop(0)
-        machine.rotors_list.append(letter)
-        if t == machine.rotors_list:
+        t = list(estat.rotors_list)
+        estat.rotors_list.pop(0)
+        estat.rotors_list.append(letter)
+        if t == estat.rotors_list:
             return
 
     if command == 'reflector':
         if letter not in REFLECTORS.keys():
             return
-        if letter == machine.reflector:
+        if letter == estat.reflector:
             return
-        machine.reflector = letter
+        estat.reflector = letter
 
     if command == '3rotors':
-        if machine.rotors == 3:
+        if estat.rotors == 3:
             return
-        machine.rotors = 3
-        if len(machine.rotors_list) != 3:
-            machine.rotors_list.pop(0)
-            machine.rings_list = ['A', 'A', 'A']
-            machine.display = ['A', 'A', 'A']
+        estat.rotors = 3
+        if len(estat.rotors_list) != 3:
+            estat.rotors_list.pop(0)
+            estat.rings_list = ['A', 'A', 'A']
+            estat.display = ['A', 'A', 'A']
 
     if command == '4rotors':
-        if machine.rotors == 4:
+        if estat.rotors == 4:
             return
-        machine.rotors = 4
-        if len(machine.rotors_list) != 4:
-            machine.rotors_list.insert(0, 'I')
-            machine.rings_list = ['A', 'A', 'A', 'A']
-            machine.display = ['A', 'A', 'A', 'A']
+        estat.rotors = 4
+        if len(estat.rotors_list) != 4:
+            estat.rotors_list.insert(0, 'I')
+            estat.rings_list = ['A', 'A', 'A', 'A']
+            estat.display = ['A', 'A', 'A', 'A']
 
     if command == 'done':
         m = MSG.setup.format(setting=MSG.setup_rings,
-                             display=' '.join(machine.display),
-                             reflector=machine.reflector,
-                             rotors=' '.join(machine.rotors_list),
-                             rings=' '.join(machine.rings_list),
-                             plugboard=' '.join(machine.plugboard) if len(
-                                 machine.plugboard) else MSG.plugboard_empty,
-                             idisplay=' '.join(machine.display))
+                             display=' '.join(estat.display),
+                             reflector=estat.reflector,
+                             rotors=' '.join(estat.rotors_list),
+                             rings=' '.join(estat.rings_list),
+                             plugboard=' '.join(estat.plugboard) if len(
+                                 estat.plugboard) else MSG.plugboard_empty,
+                             idisplay=' '.join(estat.display))
 
-        kb = enigma_kb(machine_id, 'enigma-rings')
+        kb = enigma_kb(estat_id, 'enigma-rings')
         await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                         message_id=ctx.update.callback_query.message.message_id,
                                         text=m, reply_markup=kb)
         return
 
     m = MSG.setup.format(setting=MSG.setup_rotors,
-                         display=' '.join(machine.display),
-                         reflector=machine.reflector,
-                         rotors=' '.join(machine.rotors_list),
-                         rings=' '.join(machine.rings_list),
-                         plugboard=' '.join(machine.plugboard) if len(
-                             machine.plugboard) else MSG.plugboard_empty,
-                         idisplay=' '.join(machine.display))
+                         display=' '.join(estat.display),
+                         reflector=estat.reflector,
+                         rotors=' '.join(estat.rotors_list),
+                         rings=' '.join(estat.rings_list),
+                         plugboard=' '.join(estat.plugboard) if len(
+                             estat.plugboard) else MSG.plugboard_empty,
+                         idisplay=' '.join(estat.display))
 
     await ctx.bot.edit_message_text(chat_id=ctx.update.callback_query.message.chat.chat_id,
                                     message_id=ctx.update.callback_query.message.message_id, text=m,
-                                    reply_markup=rotors_kb(machine_id))
+                                    reply_markup=rotors_kb(estat_id))
