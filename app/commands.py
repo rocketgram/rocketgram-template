@@ -13,7 +13,7 @@ async def start_command(ctx: Context):
                                'See source code here:\n'
                                'github.com/vd2org/rocketgram-template\n\n'
                                'And Rocketgram framework source here:\n'
-                               'hgithub.com/vd2org/rocketgram\n\n'
+                               'github.com/vd2org/rocketgram\n\n'
                                'You can list all commands by type /help.\n\n'
                                'Support group: @RocketBots.',
                                disable_web_page_preview=True)
