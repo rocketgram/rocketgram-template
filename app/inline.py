@@ -4,15 +4,17 @@ from hashlib import md5
 import aiohttp
 
 from mybot import router
-from rocketgram import Context, commonfilters, ChatType, UpdateType, priority
 from rocketgram import InlineKeyboard, AnswerInlineQuery, InlineQueryResultPhoto
 from rocketgram import InlineQueryResultArticle, InputTextMessageContent
+from rocketgram import SendMessage
+from rocketgram import commonfilters, ChatType, UpdateType, priority
+from rocketgram import context
 
 
 @router.handler
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.command('/inline')
-async def inline(ctx: Context):
+async def inline():
     """Shows how to use inline."""
 
     kb = InlineKeyboard()
@@ -20,18 +22,18 @@ async def inline(ctx: Context):
     kb.inline("🏞 Get some photos", switch_inline_query='#photos').row()
     kb.inline("⁉️ Ask wikipedia").row()
 
-    await ctx.bot.send_message(ctx.update.message.user.user_id,
-                               '🔹 Demo for inline mode.\n'
-                               '\n'
-                               'Photos for demo taken from this site:\n'
-                               'https://unsplash.com/creative-commons-images',
-                               reply_markup=kb.render(), disable_web_page_preview=True)
+    await SendMessage(context.update().message.user.user_id,
+                      '🔹 Demo for inline mode.\n'
+                      '\n'
+                      'Photos for demo taken from this site:\n'
+                      'https://unsplash.com/creative-commons-images',
+                      reply_markup=kb.render(), disable_web_page_preview=True).send()
 
 
 @router.handler
 @commonfilters.update_type(UpdateType.inline_query)
 @commonfilters.inline('#photo')
-def inline_photo(ctx: Context):
+def inline_photo():
     """Shows how to send photo though inline."""
 
     photos = [
@@ -47,23 +49,22 @@ def inline_photo(ctx: Context):
                                'https://telegra.ph/file/84bdc622437d376e718c5.jpg'),
     ]
 
-    whr = AnswerInlineQuery(ctx.update.inline_query.query_id, photos)
-    ctx.webhook_request(whr)
+    AnswerInlineQuery(context.update().inline_query.query_id, photos).webhook()
 
 
 @router.handler
 @commonfilters.update_type(UpdateType.inline_query)
 @priority(1024 + 128)
-async def duckduckgo(ctx: Context):
+async def duckduckgo():
     """Produces simple wikipedia search."""
 
     # This is little hack to avoid create own aiohttp session
-    # don't do like this ;)
-    session: aiohttp.ClientSession = ctx.bot.connector._session
+    # never don't do like this ;)
+    session: aiohttp.ClientSession = context.bot().connector._session
 
     params = {
         'action': 'opensearch',
-        'search': ctx.update.inline_query.query,
+        'search': context.update().inline_query.query,
     }
     try:
         response = await session.get('https://en.wikipedia.org/w/api.php', params=params)
@@ -81,14 +82,13 @@ async def duckduckgo(ctx: Context):
                                                description=result[2][idx])
             articles.append(article)
 
-        whr = AnswerInlineQuery(ctx.update.inline_query.query_id, articles)
-        ctx.webhook_request(whr)
+        AnswerInlineQuery(context.update().inline_query.query_id, articles).webhook()
     except (json.decoder.JSONDecodeError, aiohttp.ClientConnectorError):
         pass
 
 
 @router.handler
 @commonfilters.update_type(UpdateType.chosen_inline_result)
-async def chosen(ctx: Context):
+async def chosen():
     """Does nothing."""
     pass
