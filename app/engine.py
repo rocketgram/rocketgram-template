@@ -52,7 +52,8 @@ def main():
         port = int(os.environ['PORT']) if mode == 'heroku' else int(os.environ.get('WEBHOOK_PORT', 8080))
         rocketgram.AioHttpExecutor.run(bot,
                                        os.environ['WEBHOOK_URL'].strip(),
-                                       os.environ.get('WEBHOOK_PATH', '/').strip(), port=port,
+                                       os.environ.get('WEBHOOK_PATH', '/').strip(),
+                                       host='0.0.0.0', port=port,
                                        drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))),
                                        webhook_remove=not mode == 'heroku')
 
