@@ -1,8 +1,8 @@
 import json
 
 from mybot import router
-from rocketgram import commonfilters, ChatType, SendMessage, UpdateType
-from rocketgram import context
+from rocketgram import ChatType, SendMessage, UpdateType, InlineKeyboard, EditMessageReplyMarkup, AnswerCallbackQuery
+from rocketgram import commonfilters, commonwaiters, context
 from rocketgram import make_waiter
 from rocketgram.tools import escape
 
@@ -16,6 +16,19 @@ def next_all():
 
 @router.handler
 @commonfilters.chat_type(ChatType.private)
+@commonfilters.callback('stop')
+async def stop():
+    """Shows how break existing waiter."""
+
+    yield commonwaiters.drop_waiter()
+
+    await EditMessageReplyMarkup(chat_id=context.chat().chat_id, message_id=context.message().message_id).send()
+    await AnswerCallbackQuery(context.update().callback_query.query_id).send()
+    SendMessage(context.chat().chat_id, "🔹 Ok! See you later!").webhook()
+
+
+@router.handler
+@commonfilters.chat_type(ChatType.private)
 @commonfilters.command('/echo')
 async def echo():
     """Shows how to use waiter."""
@@ -23,7 +36,10 @@ async def echo():
     msg = "🔹 Now i will send you back all messages in raw foramat like @ShowJsonBot.\n\n" \
           "Hit /cancel to exit."
 
-    SendMessage(context.update().message.chat.chat_id, msg).webhook()
+    kb = InlineKeyboard()
+    kb.callback('Stop!', 'stop')
+
+    SendMessage(context.update().message.chat.chat_id, msg, reply_markup=kb.render()).webhook()
 
     while True:
 

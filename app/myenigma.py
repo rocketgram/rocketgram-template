@@ -7,9 +7,9 @@ from enigma.rotors.data import REFLECTORS, ROTORS
 from munch import Munch
 
 from mybot import router
-from rocketgram import Bot, commonfilters, ChatType
 from rocketgram import EditMessageReplyMarkup, EditMessageText
 from rocketgram import InlineKeyboard, SendMessage, AnswerCallbackQuery
+from rocketgram import commonfilters, ChatType
 from rocketgram import context
 
 # Added one more reflector for compatibility to Android App
@@ -46,10 +46,7 @@ MSG.plugboard_error = "Plugboard must contains pairs of unique letters."
 
 logger = logging.getLogger('enigma')
 
-
-@router.on_init
-def init(bot: Bot):
-    bot.globals.enigmas = dict()
+enigmas = dict()
 
 
 @lru_cache(128)
@@ -102,11 +99,11 @@ def rotors_kb(estat_id):
 def enigma_cmd():
     while True:
         new_id = token_urlsafe(8)
-        if new_id not in context.bot().globals.enigmas:
+        if new_id not in enigmas:
             break
 
     estat = Munch()
-    context.bot().globals.enigmas[new_id] = estat
+    enigmas[new_id] = estat
 
     estat.input = ''
     estat.output = ''
@@ -136,7 +133,7 @@ def enigma_cmd():
 async def enigma_act():
     estat_id, command, letter = context.update().callback_query.data.split()[1:]
 
-    estat = context.bot().globals.enigmas.get(estat_id)
+    estat = enigmas.get(estat_id)
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,
@@ -208,7 +205,7 @@ async def enigma_act():
 async def enigma_setup_display():
     estat_id, command, letter = context.update().callback_query.data.split()[1:]
 
-    estat = context.bot().globals.enigmas.get(estat_id)
+    estat = enigmas.get(estat_id)
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,
@@ -263,7 +260,7 @@ async def enigma_setup_display():
 async def enigma_setup_plugboard():
     estat_id, command, letter = context.update().callback_query.data.split()[1:]
 
-    estat = context.bot().globals.enigmas.get(estat_id)
+    estat = enigmas.get(estat_id)
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,
@@ -339,7 +336,7 @@ async def enigma_setup_plugboard():
 async def enigma_setup_rings():
     estat_id, command, letter = context.update().callback_query.data.split()[1:]
 
-    estat = context.bot().globals.enigmas.get(estat_id)
+    estat = enigmas.get(estat_id)
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,
@@ -396,7 +393,7 @@ async def enigma_setup_rings():
 async def enigma_setup_rotors():
     estat_id, command, letter = context.update().callback_query.data.split()[1:]
 
-    estat = context.bot().globals.enigmas.get(estat_id)
+    estat = enigmas.get(estat_id)
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,

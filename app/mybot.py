@@ -1,7 +1,5 @@
 import logging
 
-import munch
-
 from rocketgram import Bot, commonfilters, ChatType
 from rocketgram import MessageType, ParseModeType
 from rocketgram import UpdateType, Dispatcher, DefaultValuesMiddleware
@@ -14,7 +12,7 @@ router = Dispatcher()
 
 def get_bot(token: str):
     # create bot with given token
-    bot = Bot(token, router=router, globals_class=munch.Munch, context_data_class=munch.Munch)
+    bot = Bot(token, router=router)
 
     # Pass middleware that sets parse_mode to 'html' if it is none.
     bot.middleware(DefaultValuesMiddleware(parse_mode=ParseModeType.html))
@@ -23,14 +21,14 @@ def get_bot(token: str):
 
 
 @router.on_init
-def on_init(bot: Bot):
+def on_init():
     """This function called when bot starts. Place here any startup code."""
 
     logger.info('I am starting!')
 
 
 @router.on_shutdown
-def on_shutdown(bot: Bot):
+def on_shutdown():
     """This function called when bot stops. Place here any cleanup code."""
 
     logger.info('I am going to sleep!')

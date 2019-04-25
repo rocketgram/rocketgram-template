@@ -50,11 +50,11 @@ def main():
         rocketgram.UpdatesExecutor.run(bot, drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
     else:
         port = int(os.environ['PORT']) if mode == 'heroku' else int(os.environ.get('WEBHOOK_PORT', 8080))
-        rocketgram.WebHooksExecutor.run(bot,
-                               os.environ['WEBHOOK_URL'].strip(),
-                               os.environ.get('WEBHOOK_PATH', '/').strip(), port=port,
-                               drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))),
-                               webhook_remove=not mode == 'heroku')
+        rocketgram.AioHttpExecutor.run(bot,
+                                       os.environ['WEBHOOK_URL'].strip(),
+                                       os.environ.get('WEBHOOK_PATH', '/').strip(), port=port,
+                                       drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))),
+                                       webhook_remove=not mode == 'heroku')
 
     logger.info('Bye!')
 
