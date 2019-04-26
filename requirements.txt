@@ -1,3 +1,3 @@
-munch
-py-enigma
-rocketgram[ujson,aiohttp]
+munch==2.3.2
+py-enigma==0.1
+rocketgram[ujson,aiohttp]==1.0
