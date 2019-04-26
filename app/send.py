@@ -1,3 +1,4 @@
+import os
 from io import FileIO
 
 from mybot import router
@@ -12,7 +13,7 @@ from rocketgram import context
 async def send():
     """Shows how to send files."""
 
-    file = InputFile('music.mp3', 'audio/mpeg', FileIO('music.mp3', 'rb'))
+    file = InputFile('music.mp3', 'audio/mpeg', FileIO(os.path.dirname(__file__) + '/music.mp3', 'rb'))
 
     await SendChatAction(context.chat().chat_id, ChatActionType.upload_document).send()
 
