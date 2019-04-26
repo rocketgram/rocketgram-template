@@ -49,6 +49,8 @@ def help_command():
                 "/arranged_inline_keyboard - Shows how to arrange inline keyboard.\n"
                 "/arranged_scheme_inline_keyboard - Shows how to arrange inline keyboard by scheme.\n"
                 "\n"
+                "/send - Shows how send files.\n"
+                "\n"
                 "/echo - Waiting next request in same handler.\n"
                 "\n"
                 "/inline - Shows how to use inline mode.\n"

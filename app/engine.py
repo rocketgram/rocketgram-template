@@ -9,6 +9,7 @@ import keyboards
 import mybot
 import myenigma
 import rocketgram
+import send
 import unknown
 
 
@@ -20,6 +21,7 @@ def fix_imports():
     _ = keyboards
     _ = myenigma
     _ = inline
+    _ = send
     _ = unknown
 
 
