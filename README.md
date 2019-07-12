@@ -27,10 +27,9 @@ Create new `venv` and install dependencies, then run your first bot:
 ```bash
 python -m pip install -r requirements.txt
 
-set -a
-source app.env
-set +a
-python app/engine.py
+set -a && source app.env && set +a
+cd app
+python engine.py
 ```
 
 ### Run with pipenv
@@ -40,10 +39,9 @@ Create new `venv` and install dependencies, then run your first bot:
 ```bash
 pipenv install -r requirements.txt
 
-set -a
-source app.env
-set +a
-pipenv run python app/engine.py
+set -a && source app.env && set +a
+cd app
+pipenv run python engine.py
 ```
 
 ### Run with docker
@@ -55,6 +53,7 @@ docker run --env-file app.env --name rocketgram-template -d --restart unless-sto
 ```
 
 ### Run in Heroku
+
 Run following in console.
 Don't forget to change APP_NAME and YOUR_BOT_API_TOKEN parameters.
 

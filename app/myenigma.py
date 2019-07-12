@@ -10,7 +10,7 @@ from mybot import router
 from rocketgram import EditMessageReplyMarkup, EditMessageText
 from rocketgram import InlineKeyboard, SendMessage, AnswerCallbackQuery
 from rocketgram import commonfilters, ChatType
-from rocketgram import context
+from rocketgram import context2
 
 # Added one more reflector for compatibility to Android App
 REFLECTORS['A'] = 'EJMZALYXVBWFCRQUONTSPIKHGD'
@@ -123,7 +123,7 @@ def enigma_cmd():
                              estat.plugboard) else MSG.plugboard_empty,
                          idisplay=' '.join(estat.display))
 
-    SendMessage(context.update().message.chat.chat_id, m, reply_markup=rotors_kb(new_id)).webhook()
+    SendMessage(context2.message.chat.chat_id, m, reply_markup=rotors_kb(new_id)).webhook()
 
 
 # =========================================================================================
@@ -131,17 +131,17 @@ def enigma_cmd():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma')
 async def enigma_act():
-    estat_id, command, letter = context.update().callback_query.data.split()[1:]
+    estat_id, command, letter = context2.update.callback_query.data.split()[1:]
 
     estat = enigmas.get(estat_id)
 
     if estat is None:
-        await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,
-                                     message_id=context.update().callback_query.message.message_id).send()
-        AnswerCallbackQuery(context.update().callback_query.query_id, MSG.expired).webhook()
+        await EditMessageReplyMarkup(chat_id=context2.update.callback_query.message.chat.chat_id,
+                                     message_id=context2.update.callback_query.message.message_id).send()
+        AnswerCallbackQuery(context2.update.callback_query.query_id, MSG.expired).webhook()
         return
 
-    AnswerCallbackQuery(context.update().callback_query.query_id).webhook()
+    AnswerCallbackQuery(context2.update.callback_query.query_id).webhook()
 
     if command == 'set':
         estat.input = ''
@@ -156,8 +156,8 @@ async def enigma_act():
                              idisplay=' '.join(estat.display))
 
         kb = enigma_kb(estat_id, 'enigma-display')
-        await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                              message_id=context.update().callback_query.message.message_id, text=m,
+        await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                              message_id=context2.update.callback_query.message.message_id, text=m,
                               reply_markup=kb).send()
         return
 
@@ -193,8 +193,8 @@ async def enigma_act():
                           plugboard=' '.join(estat.plugboard) if len(estat.plugboard) else MSG.plugboard_empty,
                           idisplay=' '.join(estat.display))
 
-    await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                          message_id=context.update().callback_query.message.message_id, text=m,
+    await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                          message_id=context2.update.callback_query.message.message_id, text=m,
                           reply_markup=enigma_kb(estat_id)).send()
 
 
@@ -203,17 +203,17 @@ async def enigma_act():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma-display')
 async def enigma_setup_display():
-    estat_id, command, letter = context.update().callback_query.data.split()[1:]
+    estat_id, command, letter = context2.update.callback_query.data.split()[1:]
 
     estat = enigmas.get(estat_id)
 
     if estat is None:
-        await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,
-                                     message_id=context.update().callback_query.message.message_id).send()
-        AnswerCallbackQuery(context.update().callback_query.query_id, MSG.expired).webhook()
+        await EditMessageReplyMarkup(chat_id=context2.update.callback_query.message.chat.chat_id,
+                                     message_id=context2.update.callback_query.message.message_id).send()
+        AnswerCallbackQuery(context2.update.callback_query.query_id, MSG.expired).webhook()
         return
 
-    AnswerCallbackQuery(context.update().callback_query.query_id).webhook()
+    AnswerCallbackQuery(context2.update.callback_query.query_id).webhook()
 
     if command == 'letter':
         if letter not in KEYBOARD_CHARS:
@@ -233,8 +233,8 @@ async def enigma_setup_display():
                               rings=' '.join(estat.rings_list),
                               plugboard=' '.join(estat.plugboard) if len(estat.plugboard) else MSG.plugboard_empty,
                               idisplay=' '.join(estat.display))
-        await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                              message_id=context.update().callback_query.message.message_id, text=m,
+        await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                              message_id=context2.update.callback_query.message.message_id, text=m,
                               reply_markup=enigma_kb(estat_id)).send()
         return
 
@@ -248,8 +248,8 @@ async def enigma_setup_display():
                          idisplay=' '.join(estat.display))
 
     kb = enigma_kb(estat_id, 'enigma-display')
-    await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                          message_id=context.update().callback_query.message.message_id,
+    await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                          message_id=context2.update.callback_query.message.message_id,
                           text=m, reply_markup=kb).send()
 
 
@@ -258,14 +258,14 @@ async def enigma_setup_display():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma-plugboard')
 async def enigma_setup_plugboard():
-    estat_id, command, letter = context.update().callback_query.data.split()[1:]
+    estat_id, command, letter = context2.update.callback_query.data.split()[1:]
 
     estat = enigmas.get(estat_id)
 
     if estat is None:
-        await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,
-                                     message_id=context.update().callback_query.message.message_id).send()
-        AnswerCallbackQuery(context.update().callback_query.query_id, MSG.expired).webhook()
+        await EditMessageReplyMarkup(chat_id=context2.update.callback_query.message.chat.chat_id,
+                                     message_id=context2.update.callback_query.message.message_id).send()
+        AnswerCallbackQuery(context2.update.callback_query.query_id, MSG.expired).webhook()
         return
 
     if command == 'letter':
@@ -273,7 +273,7 @@ async def enigma_setup_plugboard():
             return
 
         if letter in estat.plugboard:
-            AnswerCallbackQuery(context.update().callback_query.query_id, MSG.plugboard_error).webhook()
+            AnswerCallbackQuery(context2.update.callback_query.query_id, MSG.plugboard_error).webhook()
             return
 
         if len(estat.plugboard) < 1:
@@ -292,11 +292,11 @@ async def enigma_setup_plugboard():
             return
         estat.plugboard.pop(-1)
 
-    AnswerCallbackQuery(context.update().callback_query.query_id).webhook()
+    AnswerCallbackQuery(context2.update.callback_query.query_id).webhook()
 
     if command == 'done':
         if len(estat.plugboard) > 0 and len(estat.plugboard[-1]) < 2:
-            AnswerCallbackQuery(context.update().callback_query.query_id, MSG.plugboard_error).webhook()
+            AnswerCallbackQuery(context2.update.callback_query.query_id, MSG.plugboard_error).webhook()
             return
 
         m = MSG.setup.format(setting=MSG.setup_display,
@@ -309,8 +309,8 @@ async def enigma_setup_plugboard():
                              idisplay=' '.join(estat.display))
 
         kb = enigma_kb(estat_id, 'enigma-display')
-        await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                              message_id=context.update().callback_query.message.message_id,
+        await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                              message_id=context2.update.callback_query.message.message_id,
                               text=m, reply_markup=kb).send()
         return
 
@@ -324,8 +324,8 @@ async def enigma_setup_plugboard():
                          idisplay=' '.join(estat.display))
 
     kb = enigma_kb(estat_id, 'enigma-plugboard', ''.join(estat.plugboard))
-    await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                          message_id=context.update().callback_query.message.message_id, text=m,
+    await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                          message_id=context2.update.callback_query.message.message_id, text=m,
                           reply_markup=kb).send()
 
 
@@ -334,17 +334,17 @@ async def enigma_setup_plugboard():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma-rings')
 async def enigma_setup_rings():
-    estat_id, command, letter = context.update().callback_query.data.split()[1:]
+    estat_id, command, letter = context2.update.callback_query.data.split()[1:]
 
     estat = enigmas.get(estat_id)
 
     if estat is None:
-        await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,
-                                     message_id=context.update().callback_query.message.message_id).send()
-        AnswerCallbackQuery(context.update().callback_query.query_id, MSG.expired).webhook()
+        await EditMessageReplyMarkup(chat_id=context2.update.callback_query.message.chat.chat_id,
+                                     message_id=context2.update.callback_query.message.message_id).send()
+        AnswerCallbackQuery(context2.update.callback_query.query_id, MSG.expired).webhook()
         return
 
-    AnswerCallbackQuery(context.update().callback_query.query_id).webhook()
+    AnswerCallbackQuery(context2.update.callback_query.query_id).webhook()
 
     if command == 'letter':
         if letter not in KEYBOARD_CHARS:
@@ -366,8 +366,8 @@ async def enigma_setup_rings():
                              idisplay=' '.join(estat.display))
 
         kb = enigma_kb(estat_id, 'enigma-plugboard')
-        await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                              message_id=context.update().callback_query.message.message_id,
+        await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                              message_id=context2.update.callback_query.message.message_id,
                               text=m, reply_markup=kb).send()
         return
 
@@ -381,8 +381,8 @@ async def enigma_setup_rings():
                          idisplay=' '.join(estat.display))
 
     kb = enigma_kb(estat_id, 'enigma-rings')
-    await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                          message_id=context.update().callback_query.message.message_id,
+    await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                          message_id=context2.update.callback_query.message.message_id,
                           text=m, reply_markup=kb).send()
 
 
@@ -391,17 +391,17 @@ async def enigma_setup_rings():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('enigma-rotors')
 async def enigma_setup_rotors():
-    estat_id, command, letter = context.update().callback_query.data.split()[1:]
+    estat_id, command, letter = context2.update.callback_query.data.split()[1:]
 
     estat = enigmas.get(estat_id)
 
     if estat is None:
-        await EditMessageReplyMarkup(chat_id=context.update().callback_query.message.chat.chat_id,
-                                     message_id=context.update().callback_query.message.message_id).send()
-        AnswerCallbackQuery(context.update().callback_query.query_id, MSG.expired).webhook()
+        await EditMessageReplyMarkup(chat_id=context2.update.callback_query.message.chat.chat_id,
+                                     message_id=context2.update.callback_query.message.message_id).send()
+        AnswerCallbackQuery(context2.update.callback_query.query_id, MSG.expired).webhook()
         return
 
-    AnswerCallbackQuery(context.update().callback_query.query_id).webhook()
+    AnswerCallbackQuery(context2.update.callback_query.query_id).webhook()
 
     if command == 'rotor':
         if letter not in ROTORS.keys():
@@ -448,8 +448,8 @@ async def enigma_setup_rotors():
                              idisplay=' '.join(estat.display))
 
         kb = enigma_kb(estat_id, 'enigma-rings')
-        await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                              message_id=context.update().callback_query.message.message_id,
+        await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                              message_id=context2.update.callback_query.message.message_id,
                               text=m, reply_markup=kb).send()
         return
 
@@ -462,6 +462,6 @@ async def enigma_setup_rotors():
                              estat.plugboard) else MSG.plugboard_empty,
                          idisplay=' '.join(estat.display))
 
-    await EditMessageText(chat_id=context.update().callback_query.message.chat.chat_id,
-                          message_id=context.update().callback_query.message.message_id, text=m,
+    await EditMessageText(chat_id=context2.update.callback_query.message.chat.chat_id,
+                          message_id=context2.update.callback_query.message.message_id, text=m,
                           reply_markup=rotors_kb(estat_id)).send()

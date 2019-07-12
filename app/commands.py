@@ -1,6 +1,6 @@
 from mybot import router
 from rocketgram import commonfilters, ChatType, SendMessage
-from rocketgram import context
+from rocketgram import context2
 
 
 @router.handler
@@ -9,8 +9,8 @@ from rocketgram import context
 async def start_command():
     """This is asynchronous handler. You can use here any async code."""
 
-    await SendMessage(context.update().message.user.user_id,
-                      '🔹 Hello there. This is the demo bot for Rockegram framework.\n\n'
+    await SendMessage(context2.message.user.user_id,
+                      '🔹 Hello there. This is the demo bot for Rocketgram framework.\n\n'
                       'See source code here:\n'
                       'github.com/vd2org/rocketgram-template\n\n'
                       'And Rocketgram framework source here:\n'
@@ -33,7 +33,7 @@ def help_command():
     If you use webhook executor this will be send as reply of received a webhook.
     Otherwise bot's router will fallback to send by regular call."""
 
-    SendMessage(context.update().message.user.user_id,
+    SendMessage(context2.message.user.user_id,
                 "🔹 Bot's help.\n"
                 "\n"
                 "/start - Print welcome message.\n"

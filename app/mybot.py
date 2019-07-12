@@ -3,7 +3,7 @@ import logging
 from rocketgram import Bot, commonfilters, ChatType
 from rocketgram import MessageType, ParseModeType
 from rocketgram import UpdateType, Dispatcher, DefaultValuesMiddleware
-from rocketgram import context
+from rocketgram import context2
 
 logger = logging.getLogger('mybot')
 
@@ -41,8 +41,8 @@ def before_callback_request():
     """This is preprocessor. All preprocessor will be called for every update with callback_query."""
 
     logger.info('Got new callback from %s: `%s`',
-                context.update().callback_query.user.user_id,
-                context.update().callback_query.data)
+                context2.update.callback_query.user.user_id,
+                context2.update.callback_query.data)
 
 
 @router.before
@@ -51,8 +51,8 @@ def before_callback_request():
 def before_message_request():
     """This is preprocessor. All preprocessor will be called for every update with message."""
 
-    if context.update().message.message_type == MessageType.text:
-        logger.info('Got new message from %s: `%s`', context.update().message.user.user_id,
-                    context.update().message.text)
+    if context2.message.message_type == MessageType.text:
+        logger.info('Got new message from %s: `%s`', context2.message.user.user_id,
+                    context2.message.text)
     else:
-        logger.info('Got new message from %s', context.update().message.user.user_id)
+        logger.info('Got new message from %s', context2.message.user.user_id)
