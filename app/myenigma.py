@@ -272,7 +272,9 @@ async def enigma_setup_plugboard():
         if letter not in KEYBOARD_CHARS:
             return
 
-        if letter in estat.plugboard:
+        print(letter, estat.plugboard)
+
+        if letter in ''.join(estat.plugboard):
             AnswerCallbackQuery(context2.update.callback_query.query_id, MSG.plugboard_error).webhook()
             return
 
