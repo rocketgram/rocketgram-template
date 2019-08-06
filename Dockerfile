@@ -4,8 +4,12 @@ COPY requirements.txt /opt/
 
 RUN apk update && \
     apk add --no-cache ca-certificates && \
-    pip install -r /opt/requirements.txt --no-use-pep517 --no-cache-dir -q --compile && \
-    rm -rf /var/cache/apk/* &&
+    apk add --no-cache --virtual .build-deps gcc musl-dev
+
+RUN pip install -r /opt/requirements.txt --no-use-pep517 --no-cache-dir -q --compile
+
+RUN apk del .build-deps gcc musl-dev && \
+    rm -rf /var/cache/apk/*
 
 COPY app/ /opt/app/
 
