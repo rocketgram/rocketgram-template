@@ -3,6 +3,7 @@ import os
 
 import callbacks
 import commands
+import dice
 import echo
 import inline
 import keyboards
@@ -22,6 +23,7 @@ def fix_imports():
     _ = myenigma
     _ = inline
     _ = send
+    _ = dice
     _ = unknown
 
 

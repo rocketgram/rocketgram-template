@@ -55,4 +55,6 @@ def help_command():
                 "\n"
                 "/inline - Shows how to use inline mode.\n"
                 "\n"
+                "/dice - Sends dice.\n"
+                "\n"
                 "/enigma - Enigma cypher machine").webhook()
