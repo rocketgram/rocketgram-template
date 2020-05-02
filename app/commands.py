@@ -1,6 +1,6 @@
 from mybot import router
 from rocketgram import commonfilters, ChatType, SendMessage
-from rocketgram import context2
+from rocketgram import context
 
 
 @router.handler
@@ -8,8 +8,7 @@ from rocketgram import context2
 @commonfilters.command('/start')
 async def start_command():
     """This is asynchronous handler. You can use here any async code."""
-
-    await SendMessage(context2.message.user.user_id,
+    await SendMessage(context.message.user.user_id,
                       '🔹 Hello there. This is the demo bot for Rocketgram framework.\n\n'
                       'See source code here:\n'
                       'github.com/vd2org/rocketgram-template\n\n'
@@ -17,7 +16,7 @@ async def start_command():
                       'github.com/vd2org/rocketgram\n\n'
                       'You can list all commands by type /help.\n\n'
                       'Support group: @RocketBots.',
-                      disable_web_page_preview=True).send()
+                      disable_web_page_preview=True).send2()
 
 
 @router.handler
@@ -30,10 +29,10 @@ def help_command():
 
     This handler also demonstrates how to make webhook-request.
 
-    If you use webhook executor this will be send as reply of received a webhook.
+    If you use webhook executor this will be sent as reply of received a webhook.
     Otherwise bot's router will fallback to send by regular call."""
 
-    SendMessage(context2.message.user.user_id,
+    SendMessage(context.message.user.user_id,
                 "🔹 Bot's help.\n"
                 "\n"
                 "/start - Print welcome message.\n"
@@ -56,5 +55,7 @@ def help_command():
                 "/inline - Shows how to use inline mode.\n"
                 "\n"
                 "/dice - Sends dice.\n"
+                "\n"
+                "/poll - Sends poll.\n"
                 "\n"
                 "/enigma - Enigma cypher machine").webhook()

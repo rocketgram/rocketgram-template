@@ -8,7 +8,7 @@ from rocketgram import InlineKeyboard, AnswerInlineQuery, InlineQueryResultPhoto
 from rocketgram import InlineQueryResultArticle, InputTextMessageContent
 from rocketgram import SendMessage
 from rocketgram import commonfilters, ChatType, UpdateType, priority
-from rocketgram import context2
+from rocketgram import context
 
 
 @router.handler
@@ -22,12 +22,12 @@ async def inline():
     kb.inline("🏞 Get some photos", switch_inline_query='#photos').row()
     kb.inline("⁉️ Ask wikipedia").row()
 
-    await SendMessage(context2.message.user.user_id,
+    await SendMessage(context.message.user.user_id,
                       '🔹 Demo for inline mode.\n'
                       '\n'
                       'Photos for demo taken from this site:\n'
                       'https://unsplash.com/creative-commons-images',
-                      reply_markup=kb.render(), disable_web_page_preview=True).send()
+                      reply_markup=kb.render(), disable_web_page_preview=True).send2()
 
 
 @router.handler
@@ -49,7 +49,7 @@ def inline_photo():
                                'https://telegra.ph/file/84bdc622437d376e718c5.jpg'),
     ]
 
-    AnswerInlineQuery(context2.update.inline_query.query_id, photos).webhook()
+    AnswerInlineQuery(context.update.inline_query.query_id, photos).webhook()
 
 
 @router.handler
@@ -60,11 +60,11 @@ async def duckduckgo():
 
     # This is little hack to avoid create own aiohttp session
     # never don't do like this ;)
-    session: aiohttp.ClientSession = context2.bot.connector._session
+    session: aiohttp.ClientSession = context.bot.connector._session
 
     params = {
         'action': 'opensearch',
-        'search': context2.update.inline_query.query,
+        'search': context.update.inline_query.query,
     }
     try:
         response = await session.get('https://en.wikipedia.org/w/api.php', params=params)
@@ -82,7 +82,7 @@ async def duckduckgo():
                                                description=result[2][idx])
             articles.append(article)
 
-        AnswerInlineQuery(context2.update.inline_query.query_id, articles).webhook()
+        AnswerInlineQuery(context.update.inline_query.query_id, articles).webhook()
     except (json.decoder.JSONDecodeError, aiohttp.ClientConnectorError):
         pass
 

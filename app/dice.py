@@ -1,13 +1,16 @@
 from mybot import router
 from rocketgram import commonfilters, ChatType, SendDice
-from rocketgram import context2
+from rocketgram import context
 
 
 @router.handler
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.command('/dice')
-def dice():
-    """\
-    Send dice for user. Just for fun."""
+class Dice:
+    def __call__(self):
+        """\
+        Send dice for user. This also demonstrates how to use class-based handlers."""
 
-    SendDice(context2.user.user_id).webhook()
+        emoji = "🎲" if context.update.update_id % 2 else "🎯"
+
+        SendDice(context.user.user_id, emoji).webhook()

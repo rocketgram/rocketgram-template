@@ -1,6 +1,6 @@
 from mybot import router
 from rocketgram import MessageType, ReplyKeyboard, ReplyKeyboardRemove
-from rocketgram import context2, commonfilters, ChatType, SendMessage
+from rocketgram import context, commonfilters, ChatType, SendMessage
 
 
 @router.handler
@@ -16,9 +16,9 @@ async def keyboard_command():
     kb.text("😖 All bad").row()
     kb.text("/cancel")
 
-    await SendMessage(context2.message.user.user_id,
+    await SendMessage(context.message.user.user_id,
                       '🔹 How are you filling?',
-                      reply_markup=kb.render()).send()
+                      reply_markup=kb.render()).send2()
 
 
 @router.handler
@@ -31,9 +31,9 @@ async def keyboard_location_command():
     kb.location("🗺 Send location").row()
     kb.text("/cancel")
 
-    await SendMessage(context2.message.user.user_id,
+    await SendMessage(context.message.user.user_id,
                       '🔹 Send me your location.',
-                      reply_markup=kb.render()).send()
+                      reply_markup=kb.render()).send2()
 
 
 @router.handler
@@ -42,10 +42,10 @@ async def keyboard_location_command():
 async def got_location():
     """Reaction on location"""
 
-    await SendMessage(context2.message.user.user_id,
+    await SendMessage(context.message.user.user_id,
                       '🔹 Now i known where are you. 😄',
                       reply_markup=ReplyKeyboardRemove(),
-                      reply_to_message_id=context2.message.message_id).send()
+                      reply_to_message_id=context.message.message_id).send2()
 
 
 @router.handler
@@ -58,9 +58,9 @@ async def keyboard_contact_command():
     kb.contact("☎️ Send contact").row()
     kb.text("/cancel")
 
-    await SendMessage(context2.message.user.user_id,
+    await SendMessage(context.message.user.user_id,
                       '🔹 Send me your contact.',
-                      reply_markup=kb.render()).send()
+                      reply_markup=kb.render()).send2()
 
 
 @router.handler
@@ -69,10 +69,10 @@ async def keyboard_contact_command():
 async def got_contact():
     """Reaction on contact"""
 
-    await SendMessage(context2.message.user.user_id,
+    await SendMessage(context.message.user.user_id,
                       '🔹 Now i known your phone. 😄',
                       reply_markup=ReplyKeyboardRemove(),
-                      reply_to_message_id=context2.message.message_id).send()
+                      reply_to_message_id=context.message.message_id).send2()
 
 
 @router.handler
@@ -81,6 +81,6 @@ async def got_contact():
 def cancel_command():
     """Removes current reply keyboard"""
 
-    SendMessage(context2.message.user.user_id,
+    SendMessage(context.message.user.user_id,
                 "🔹 What next?",
                 reply_markup=ReplyKeyboardRemove()).webhook()

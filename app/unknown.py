@@ -1,6 +1,6 @@
 from mybot import router
 from rocketgram import commonfilters, ChatType, SendMessage, priority
-from rocketgram import context2
+from rocketgram import context
 
 
 @router.handler
@@ -16,5 +16,5 @@ def unknown():
     Default priority in Dispatcher is 1024, so for
     set the order of handlers you can use @priority decorator."""
 
-    SendMessage(context2.user.user_id,
+    SendMessage(context.user.user_id,
                 "🔹 I don't known what to do. May be /help?").webhook()

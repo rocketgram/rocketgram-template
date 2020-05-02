@@ -9,6 +9,7 @@ import inline
 import keyboards
 import mybot
 import myenigma
+import poll
 import rocketgram
 import send
 import unknown
@@ -25,6 +26,7 @@ def fix_imports():
     _ = send
     _ = dice
     _ = unknown
+    _ = poll
 
 
 logger = logging.getLogger('minibots.engine')

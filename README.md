@@ -1,7 +1,7 @@
 # Template of bot with Rocketgram
 
 This is template repo for using to create and run your first bot with
-[Rocketgram framework](https://github.com/vd2org/rocketgram).
+[Rocketgram framework](https://github.com/rocketgram/rocketgram).
 This also demonstrates how to use the framework.
 
 You can see working(runs in heroku) demo [here](https://t.me/RocketgramBot).

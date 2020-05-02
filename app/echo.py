@@ -2,7 +2,7 @@ import json
 
 from mybot import router
 from rocketgram import ChatType, SendMessage, UpdateType, InlineKeyboard, EditMessageReplyMarkup, AnswerCallbackQuery
-from rocketgram import commonfilters, commonwaiters, context2
+from rocketgram import commonfilters, commonwaiters, context
 from rocketgram import make_waiter
 from rocketgram.tools import escape
 
@@ -22,9 +22,9 @@ async def stop():
 
     yield commonwaiters.drop_waiter()
 
-    await EditMessageReplyMarkup(chat_id=context2.chat.chat_id, message_id=context2.message.message_id).send()
-    await AnswerCallbackQuery(context2.update.callback_query.query_id).send()
-    SendMessage(context2.chat.chat_id, "🔹 Ok! See you later!").webhook()
+    await EditMessageReplyMarkup(chat_id=context.chat.chat_id, message_id=context.message.message_id).send2()
+    await AnswerCallbackQuery(context.callback.query_id).send2()
+    SendMessage(context.chat.chat_id, "🔹 Ok! See you later!").webhook()
 
 
 @router.handler
@@ -39,7 +39,7 @@ async def echo():
     kb = InlineKeyboard()
     kb.callback('Stop!', 'stop')
 
-    SendMessage(context2.message.chat.chat_id, msg, reply_markup=kb.render()).webhook()
+    SendMessage(context.message.chat.chat_id, msg, reply_markup=kb.render()).webhook()
 
     while True:
 
@@ -47,16 +47,16 @@ async def echo():
         # this is python's async generator
         yield next_all()
 
-        if context2.message.text == '/cancel':
-            SendMessage(context2.message.chat.chat_id, "🔹 Ok! See you later!").webhook()
+        if context.message.text == '/cancel':
+            SendMessage(context.message.chat.chat_id, "🔹 Ok! See you later!").webhook()
             return
 
         # print reminder every five updates
-        if not context2.update.update_id % 5:
-            await SendMessage(context2.message.chat.chat_id,
-                              "🔹 I am in <code>echo</code> mode. Hit /cancel to exit.").send()
+        if not context.update.update_id % 5:
+            await SendMessage(context.message.chat.chat_id,
+                              "🔹 I am in <code>echo</code> mode. Hit /cancel to exit.").send2()
 
-        prepared = escape.html(json.dumps(context2.update.raw, ensure_ascii=False, indent=1))
-        SendMessage(context2.message.chat.chat_id,
+        prepared = escape.html(json.dumps(context.update.raw, ensure_ascii=False, indent=1))
+        SendMessage(context.message.chat.chat_id,
                     f"<code>{prepared}</code>",
-                    reply_to_message_id=context2.message.message_id).webhook()
+                    reply_to_message_id=context.message.message_id).webhook()
