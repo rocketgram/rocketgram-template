@@ -18,7 +18,7 @@ async def keyboard_command():
 
     await SendMessage(context.message.user.user_id,
                       '🔹 How are you filling?',
-                      reply_markup=kb.render()).send2()
+                      reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -33,7 +33,7 @@ async def keyboard_location_command():
 
     await SendMessage(context.message.user.user_id,
                       '🔹 Send me your location.',
-                      reply_markup=kb.render()).send2()
+                      reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -45,7 +45,7 @@ async def got_location():
     await SendMessage(context.message.user.user_id,
                       '🔹 Now i known where are you. 😄',
                       reply_markup=ReplyKeyboardRemove(),
-                      reply_to_message_id=context.message.message_id).send2()
+                      reply_to_message_id=context.message.message_id).send()
 
 
 @router.handler
@@ -60,7 +60,7 @@ async def keyboard_contact_command():
 
     await SendMessage(context.message.user.user_id,
                       '🔹 Send me your contact.',
-                      reply_markup=kb.render()).send2()
+                      reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -72,7 +72,7 @@ async def got_contact():
     await SendMessage(context.message.user.user_id,
                       '🔹 Now i known your phone. 😄',
                       reply_markup=ReplyKeyboardRemove(),
-                      reply_to_message_id=context.message.message_id).send2()
+                      reply_to_message_id=context.message.message_id).send()
 
 
 @router.handler

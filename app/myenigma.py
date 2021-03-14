@@ -137,7 +137,7 @@ async def enigma_act():
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.message.chat.chat_id,
-                                     message_id=context.message.message_id).send2()
+                                     message_id=context.message.message_id).send()
         AnswerCallbackQuery(context.callback.query_id, MSG.expired).webhook()
         return
 
@@ -158,7 +158,7 @@ async def enigma_act():
         kb = enigma_kb(estat_id, 'enigma-display')
         await EditMessageText(chat_id=context.message.chat.chat_id,
                               message_id=context.message.message_id, text=m,
-                              reply_markup=kb).send2()
+                              reply_markup=kb).send()
         return
 
     machine = EnigmaMachine.from_key_sheet(
@@ -195,7 +195,7 @@ async def enigma_act():
 
     await EditMessageText(chat_id=context.message.chat.chat_id,
                           message_id=context.message.message_id, text=m,
-                          reply_markup=enigma_kb(estat_id)).send2()
+                          reply_markup=enigma_kb(estat_id)).send()
 
 
 # =========================================================================================
@@ -209,7 +209,7 @@ async def enigma_setup_display():
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.message.chat.chat_id,
-                                     message_id=context.message.message_id).send2()
+                                     message_id=context.message.message_id).send()
         AnswerCallbackQuery(context.callback.query_id, MSG.expired).webhook()
         return
 
@@ -235,7 +235,7 @@ async def enigma_setup_display():
                               idisplay=' '.join(estat.display))
         await EditMessageText(chat_id=context.message.chat.chat_id,
                               message_id=context.message.message_id, text=m,
-                              reply_markup=enigma_kb(estat_id)).send2()
+                              reply_markup=enigma_kb(estat_id)).send()
         return
 
     m = MSG.setup.format(setting=MSG.setup_display,
@@ -250,7 +250,7 @@ async def enigma_setup_display():
     kb = enigma_kb(estat_id, 'enigma-display')
     await EditMessageText(chat_id=context.message.chat.chat_id,
                           message_id=context.message.message_id,
-                          text=m, reply_markup=kb).send2()
+                          text=m, reply_markup=kb).send()
 
 
 # =========================================================================================
@@ -264,7 +264,7 @@ async def enigma_setup_plugboard():
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.message.chat.chat_id,
-                                     message_id=context.message.message_id).send2()
+                                     message_id=context.message.message_id).send()
         AnswerCallbackQuery(context.callback.query_id, MSG.expired).webhook()
         return
 
@@ -311,7 +311,7 @@ async def enigma_setup_plugboard():
         kb = enigma_kb(estat_id, 'enigma-display')
         await EditMessageText(chat_id=context.message.chat.chat_id,
                               message_id=context.message.message_id,
-                              text=m, reply_markup=kb).send2()
+                              text=m, reply_markup=kb).send()
         return
 
     m = MSG.setup.format(setting=MSG.setup_plugboard,
@@ -326,7 +326,7 @@ async def enigma_setup_plugboard():
     kb = enigma_kb(estat_id, 'enigma-plugboard', ''.join(estat.plugboard))
     await EditMessageText(chat_id=context.message.chat.chat_id,
                           message_id=context.message.message_id, text=m,
-                          reply_markup=kb).send2()
+                          reply_markup=kb).send()
 
 
 # =========================================================================================
@@ -340,7 +340,7 @@ async def enigma_setup_rings():
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.message.chat.chat_id,
-                                     message_id=context.message.message_id).send2()
+                                     message_id=context.message.message_id).send()
         AnswerCallbackQuery(context.callback.query_id, MSG.expired).webhook()
         return
 
@@ -368,7 +368,7 @@ async def enigma_setup_rings():
         kb = enigma_kb(estat_id, 'enigma-plugboard')
         await EditMessageText(chat_id=context.message.chat.chat_id,
                               message_id=context.message.message_id,
-                              text=m, reply_markup=kb).send2()
+                              text=m, reply_markup=kb).send()
         return
 
     m = MSG.setup.format(setting=MSG.setup_rings,
@@ -383,7 +383,7 @@ async def enigma_setup_rings():
     kb = enigma_kb(estat_id, 'enigma-rings')
     await EditMessageText(chat_id=context.message.chat.chat_id,
                           message_id=context.message.message_id,
-                          text=m, reply_markup=kb).send2()
+                          text=m, reply_markup=kb).send()
 
 
 # =========================================================================================
@@ -397,7 +397,7 @@ async def enigma_setup_rotors():
 
     if estat is None:
         await EditMessageReplyMarkup(chat_id=context.message.chat.chat_id,
-                                     message_id=context.message.message_id).send2()
+                                     message_id=context.message.message_id).send()
         AnswerCallbackQuery(context.callback.query_id, MSG.expired).webhook()
         return
 
@@ -450,7 +450,7 @@ async def enigma_setup_rotors():
         kb = enigma_kb(estat_id, 'enigma-rings')
         await EditMessageText(chat_id=context.message.chat.chat_id,
                               message_id=context.message.message_id,
-                              text=m, reply_markup=kb).send2()
+                              text=m, reply_markup=kb).send()
         return
 
     m = MSG.setup.format(setting=MSG.setup_rotors,
@@ -463,4 +463,4 @@ async def enigma_setup_rotors():
 
     await EditMessageText(chat_id=context.message.chat.chat_id,
                           message_id=context.message.message_id, text=m,
-                          reply_markup=rotors_kb(estat_id)).send2()
+                          reply_markup=rotors_kb(estat_id)).send()

@@ -15,6 +15,6 @@ async def send():
 
     file = InputFile('music.mp3', 'audio/mpeg', FileIO(os.path.dirname(__file__) + '/music.mp3', 'rb'))
 
-    await SendChatAction(context.chat.chat_id, ChatActionType.upload_document).send2()
+    await SendChatAction(context.chat.chat_id, ChatActionType.upload_document).send()
 
-    await SendAudio(context.chat.chat_id, file).send2()
+    await SendAudio(context.chat.chat_id, file).send()

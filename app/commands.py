@@ -16,7 +16,7 @@ async def start_command():
                       'github.com/vd2org/rocketgram\n\n'
                       'You can list all commands by type /help.\n\n'
                       'Support group: @RocketBots.',
-                      disable_web_page_preview=True).send2()
+                      disable_web_page_preview=True).send()
 
 
 @router.handler
@@ -58,4 +58,4 @@ def help_command():
                 "\n"
                 "/poll - Sends poll.\n"
                 "\n"
-                "/enigma - Enigma cypher machine").webhook()
+                "/enigma - Enigma cypher machine.").webhook()

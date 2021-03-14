@@ -19,7 +19,7 @@ async def simple_inline_keyboard():
 
     await SendMessage(context.message.user.user_id,
                       '🔹 How are you filling?',
-                      reply_markup=kb.render()).send2()
+                      reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -31,9 +31,9 @@ async def reaction_on_simple_keyboard():
     variant = context.callback.data.split()[1]
 
     if variant == 'close':
-        await AnswerCallbackQuery(context.callback.query_id).send2()
+        await AnswerCallbackQuery(context.callback.query_id).send()
         await DeleteMessage(context.message.chat.chat_id,
-                            context.message.message_id).send2()
+                            context.message.message_id).send()
         return
 
     answers = {
@@ -41,12 +41,11 @@ async def reaction_on_simple_keyboard():
         '2': '🔹 Great, Ok!',
         '3': '🔹 Ok!',
         '4': '🔹 Sad!',
-
     }
 
     msg = answers[variant]
 
-    await AnswerCallbackQuery(context.callback.query_id, msg, show_alert=True).send2()
+    await AnswerCallbackQuery(context.callback.query_id, msg, show_alert=True).send()
 
 
 @router.handler
@@ -66,7 +65,7 @@ async def arranged_simple_inline_keyboard():
 
     await SendMessage(context.message.user.user_id,
                       '🔹 Select number.',
-                      reply_markup=kb.render()).send2()
+                      reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -78,14 +77,14 @@ async def reaction_on_simple_keyboard():
     variant = context.callback.data.split()[1]
 
     if variant == 'close':
-        await AnswerCallbackQuery(context.callback.query_id).send2()
+        await AnswerCallbackQuery(context.callback.query_id).send()
         await DeleteMessage(context.message.chat.chat_id,
-                            context.message.message_id).send2()
+                            context.message.message_id).send()
         return
 
     msg = '🔹 Selected: %s' % variant
 
-    await AnswerCallbackQuery(context.callback.query_id, msg).send2()
+    await AnswerCallbackQuery(context.callback.query_id, msg).send()
 
 
 @router.handler
@@ -109,7 +108,7 @@ async def arranged_simple_inline_keyboard():
 
     await SendMessage(context.message.user.user_id,
                       '🔹 Select number.',
-                      reply_markup=kb.render()).send2()
+                      reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -121,26 +120,26 @@ async def reaction_on_simple_keyboard():
     variant = context.callback.data.split()[1]
 
     if variant == 'close':
-        await AnswerCallbackQuery(context.callback.query_id).send2()
+        await AnswerCallbackQuery(context.callback.query_id).send()
         await DeleteMessage(context.message.chat.chat_id,
-                            context.message.message_id).send2()
+                            context.message.message_id).send()
         return
 
     if variant == 'do':
         await AnswerCallbackQuery(context.callback.query_id, '🔹 Doing something',
-                                  show_alert=True).send2()
+                                  show_alert=True).send()
         return
 
     if variant == 'prev':
         await AnswerCallbackQuery(context.callback.query_id, '🔹 Showing previous page',
-                                  show_alert=True).send2()
+                                  show_alert=True).send()
         return
 
     if variant == 'next':
         await AnswerCallbackQuery(context.callback.query_id, '🔹 Showing next page',
-                                  show_alert=True).send2()
+                                  show_alert=True).send()
         return
 
     msg = '🔹 Selected: %s' % variant
 
-    await AnswerCallbackQuery(context.callback.query_id, msg).send2()
+    await AnswerCallbackQuery(context.callback.query_id, msg).send()

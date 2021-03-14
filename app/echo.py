@@ -22,8 +22,8 @@ async def stop():
 
     yield commonwaiters.drop_waiter()
 
-    await EditMessageReplyMarkup(chat_id=context.chat.chat_id, message_id=context.message.message_id).send2()
-    await AnswerCallbackQuery(context.callback.query_id).send2()
+    await EditMessageReplyMarkup(chat_id=context.chat.chat_id, message_id=context.message.message_id).send()
+    await AnswerCallbackQuery(context.callback.query_id).send()
     SendMessage(context.chat.chat_id, "🔹 Ok! See you later!").webhook()
 
 
@@ -54,7 +54,7 @@ async def echo():
         # print reminder every five updates
         if not context.update.update_id % 5:
             await SendMessage(context.message.chat.chat_id,
-                              "🔹 I am in <code>echo</code> mode. Hit /cancel to exit.").send2()
+                              "🔹 I am in <code>echo</code> mode. Hit /cancel to exit.").send()
 
         prepared = escape.html(json.dumps(context.update.raw, ensure_ascii=False, indent=1))
         SendMessage(context.message.chat.chat_id,

@@ -1,33 +1,18 @@
 ﻿import logging
 import os
 
-import callbacks
-import commands
-import dice
-import echo
-import inline
-import keyboards
+import callbacks  # noqa
+import commands  # noqa
+import dice  # noqa
+import echo  # noqa
+import inline  # noqa
+import keyboards  # noqa
 import mybot
-import myenigma
-import poll
+import myenigma  # noqa
+import poll  # noqa
 import rocketgram
-import send
-import unknown
-
-
-# avoid to remove "unused" imports by optimizers
-def fix_imports():
-    _ = callbacks
-    _ = commands
-    _ = echo
-    _ = keyboards
-    _ = myenigma
-    _ = inline
-    _ = send
-    _ = dice
-    _ = unknown
-    _ = poll
-
+import send  # noqa
+import unknown  # noqa
 
 logger = logging.getLogger('minibots.engine')
 
@@ -53,14 +38,14 @@ def main():
     bot = mybot.get_bot(os.environ['TOKEN'].strip())
 
     if mode == 'updates':
-        rocketgram.UpdatesExecutor.run(bot, drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
+        rocketgram.UpdatesExecutor.run(bot, drop_pending_updates=bool(int(os.environ.get('DROP_UPDATES', 0))))
     else:
         port = int(os.environ['PORT']) if mode == 'heroku' else int(os.environ.get('WEBHOOK_PORT', 8080))
         rocketgram.AioHttpExecutor.run(bot,
                                        os.environ['WEBHOOK_URL'].strip(),
                                        os.environ.get('WEBHOOK_PATH', '/').strip(),
                                        host='0.0.0.0', port=port,
-                                       drop_updates=bool(int(os.environ.get('DROP_UPDATES', 0))),
+                                       drop_pending_updates=bool(int(os.environ.get('DROP_UPDATES', 0))),
                                        webhook_remove=not mode == 'heroku')
 
     logger.info('Bye!')

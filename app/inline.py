@@ -27,7 +27,7 @@ async def inline():
                       '\n'
                       'Photos for demo taken from this site:\n'
                       'https://unsplash.com/creative-commons-images',
-                      reply_markup=kb.render(), disable_web_page_preview=True).send2()
+                      reply_markup=kb.render(), disable_web_page_preview=True).send()
 
 
 @router.handler

@@ -11,7 +11,7 @@ async def send_poll():
     await SendPoll(context.user.user_id,
                    'Some question', ['Variant 1', 'Variant 2', 'Variant 3'],
                    allows_multiple_answers=True,
-                   is_anonymous=False).send2()
+                   is_anonymous=False).send()
 
 
 @router.handler
@@ -21,4 +21,4 @@ async def answer():
 
     await SendMessage(context.user.user_id,
                       f"Received answer for #{context.update.poll_answer.poll_id} - "
-                      f"{context.update.poll_answer.option_ids}").send2()
+                      f"{context.update.poll_answer.option_ids}").send()

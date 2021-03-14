@@ -1,6 +1,9 @@
 from mybot import router
-from rocketgram import commonfilters, ChatType, SendDice
+from rocketgram import commonfilters, ChatType, SendDice, DiceType
 from rocketgram import context
+
+ALL_DICES = list(DiceType)[:-1]
+ALL_DICES_LEN = len(ALL_DICES)
 
 
 @router.handler
@@ -11,6 +14,6 @@ class Dice:
         """\
         Send dice for user. This also demonstrates how to use class-based handlers."""
 
-        emoji = "🎲" if context.update.update_id % 2 else "🎯"
+        emoji = ALL_DICES[context.update.update_id % ALL_DICES_LEN]
 
         SendDice(context.user.user_id, emoji).webhook()
