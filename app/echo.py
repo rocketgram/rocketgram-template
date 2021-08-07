@@ -22,9 +22,9 @@ async def stop():
 
     yield commonwaiters.drop_waiter()
 
-    await EditMessageReplyMarkup(chat_id=context.chat.chat_id, message_id=context.message.message_id).send()
-    await AnswerCallbackQuery(context.callback.query_id).send()
-    SendMessage(context.chat.chat_id, "🔹 Ok! See you later!").webhook()
+    await EditMessageReplyMarkup(chat_id=context.chat.id, message_id=context.message.message_id).send()
+    await AnswerCallbackQuery(context.callback.id).send()
+    SendMessage(context.chat.id, "🔹 Ok! See you later!").webhook()
 
 
 @router.handler
@@ -39,7 +39,7 @@ async def echo():
     kb = InlineKeyboard()
     kb.callback('Stop!', 'stop')
 
-    SendMessage(context.message.chat.chat_id, msg, reply_markup=kb.render()).webhook()
+    SendMessage(context.chat.id, msg, reply_markup=kb.render()).webhook()
 
     while True:
 
@@ -48,15 +48,14 @@ async def echo():
         yield next_all()
 
         if context.message.text == '/cancel':
-            SendMessage(context.message.chat.chat_id, "🔹 Ok! See you later!").webhook()
+            SendMessage(context.chat.id, "🔹 Ok! See you later!").webhook()
             return
 
         # print reminder every five updates
         if not context.update.update_id % 5:
-            await SendMessage(context.message.chat.chat_id,
-                              "🔹 I am in <code>echo</code> mode. Hit /cancel to exit.").send()
+            await SendMessage(context.chat.id, "🔹 I am in <code>echo</code> mode. Hit /cancel to exit.").send()
 
         prepared = escape.html(json.dumps(context.update.raw, ensure_ascii=False, indent=1))
-        SendMessage(context.message.chat.chat_id,
+        SendMessage(context.chat.id,
                     f"<code>{prepared}</code>",
                     reply_to_message_id=context.message.message_id).webhook()

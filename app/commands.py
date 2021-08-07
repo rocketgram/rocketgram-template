@@ -8,12 +8,12 @@ from rocketgram import context
 @commonfilters.command('/start')
 async def start_command():
     """This is asynchronous handler. You can use here any async code."""
-    await SendMessage(context.message.user.user_id,
+    await SendMessage(context.user.id,
                       '🔹 Hello there. This is the demo bot for Rocketgram framework.\n\n'
                       'See source code here:\n'
-                      'github.com/vd2org/rocketgram-template\n\n'
+                      'github.com/rocketgram/rocketgram-template\n\n'
                       'And Rocketgram framework source here:\n'
-                      'github.com/vd2org/rocketgram\n\n'
+                      'github.com/rocketgram/rocketgram\n\n'
                       'You can list all commands by type /help.\n\n'
                       'Support group: @RocketBots.',
                       disable_web_page_preview=True).send()
@@ -32,7 +32,7 @@ def help_command():
     If you use webhook executor this will be sent as reply of received a webhook.
     Otherwise bot's router will fallback to send by regular call."""
 
-    SendMessage(context.message.user.user_id,
+    SendMessage(context.user.id,
                 "🔹 Bot's help.\n"
                 "\n"
                 "/start - Print welcome message.\n"

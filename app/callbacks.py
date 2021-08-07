@@ -17,9 +17,7 @@ async def simple_inline_keyboard():
     kb.callback("😖 All bad", 'simple 4').row()
     kb.callback("❌ Close", 'simple close')
 
-    await SendMessage(context.message.user.user_id,
-                      '🔹 How are you filling?',
-                      reply_markup=kb.render()).send()
+    await SendMessage(context.user.id, '🔹 How are you filling?', reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -31,9 +29,8 @@ async def reaction_on_simple_keyboard():
     variant = context.callback.data.split()[1]
 
     if variant == 'close':
-        await AnswerCallbackQuery(context.callback.query_id).send()
-        await DeleteMessage(context.message.chat.chat_id,
-                            context.message.message_id).send()
+        await AnswerCallbackQuery(context.callback.id).send()
+        await DeleteMessage(context.chat.id, context.message.message_id).send()
         return
 
     answers = {
@@ -45,7 +42,7 @@ async def reaction_on_simple_keyboard():
 
     msg = answers[variant]
 
-    await AnswerCallbackQuery(context.callback.query_id, msg, show_alert=True).send()
+    await AnswerCallbackQuery(context.callback.id, msg, show_alert=True).send()
 
 
 @router.handler
@@ -63,9 +60,7 @@ async def arranged_simple_inline_keyboard():
 
     kb.arrange_simple(5)
 
-    await SendMessage(context.message.user.user_id,
-                      '🔹 Select number.',
-                      reply_markup=kb.render()).send()
+    await SendMessage(context.user.id, '🔹 Select number.', reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -77,14 +72,13 @@ async def reaction_on_simple_keyboard():
     variant = context.callback.data.split()[1]
 
     if variant == 'close':
-        await AnswerCallbackQuery(context.callback.query_id).send()
-        await DeleteMessage(context.message.chat.chat_id,
-                            context.message.message_id).send()
+        await AnswerCallbackQuery(context.callback.id).send()
+        await DeleteMessage(context.chat.id, context.message.message_id).send()
         return
 
     msg = '🔹 Selected: %s' % variant
 
-    await AnswerCallbackQuery(context.callback.query_id, msg).send()
+    await AnswerCallbackQuery(context.callback.id, msg).send()
 
 
 @router.handler
@@ -106,9 +100,7 @@ async def arranged_simple_inline_keyboard():
 
     kb.arrange_scheme(3, 6, 1)
 
-    await SendMessage(context.message.user.user_id,
-                      '🔹 Select number.',
-                      reply_markup=kb.render()).send()
+    await SendMessage(context.user.id, '🔹 Select number.', reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -120,26 +112,23 @@ async def reaction_on_simple_keyboard():
     variant = context.callback.data.split()[1]
 
     if variant == 'close':
-        await AnswerCallbackQuery(context.callback.query_id).send()
-        await DeleteMessage(context.message.chat.chat_id,
+        await AnswerCallbackQuery(context.callback.id).send()
+        await DeleteMessage(context.chat.id,
                             context.message.message_id).send()
         return
 
     if variant == 'do':
-        await AnswerCallbackQuery(context.callback.query_id, '🔹 Doing something',
-                                  show_alert=True).send()
+        await AnswerCallbackQuery(context.callback.id, '🔹 Doing something', show_alert=True).send()
         return
 
     if variant == 'prev':
-        await AnswerCallbackQuery(context.callback.query_id, '🔹 Showing previous page',
-                                  show_alert=True).send()
+        await AnswerCallbackQuery(context.callback.id, '🔹 Showing previous page', show_alert=True).send()
         return
 
     if variant == 'next':
-        await AnswerCallbackQuery(context.callback.query_id, '🔹 Showing next page',
-                                  show_alert=True).send()
+        await AnswerCallbackQuery(context.callback.id, '🔹 Showing next page', show_alert=True).send()
         return
 
     msg = '🔹 Selected: %s' % variant
 
-    await AnswerCallbackQuery(context.callback.query_id, msg).send()
+    await AnswerCallbackQuery(context.callback.id, msg).send()

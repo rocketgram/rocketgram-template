@@ -8,7 +8,7 @@ from rocketgram import context, commonfilters, ChatType, SendMessage, SendPoll, 
 async def send_poll():
     """Shows how to send polls"""
 
-    await SendPoll(context.user.user_id,
+    await SendPoll(context.user.id,
                    'Some question', ['Variant 1', 'Variant 2', 'Variant 3'],
                    allows_multiple_answers=True,
                    is_anonymous=False).send()
@@ -19,6 +19,6 @@ async def send_poll():
 async def answer():
     """Receives poll's answers"""
 
-    await SendMessage(context.user.user_id,
-                      f"Received answer for #{context.update.poll_answer.poll_id} - "
-                      f"{context.update.poll_answer.option_ids}").send()
+    await SendMessage(context.user.id,
+                      f"Received answer for #{context.answer.poll_id} - "
+                      f"{context.answer.option_ids}").send()

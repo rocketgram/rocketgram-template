@@ -16,4 +16,4 @@ class Dice:
 
         emoji = ALL_DICES[context.update.update_id % ALL_DICES_LEN]
 
-        SendDice(context.user.user_id, emoji).webhook()
+        SendDice(context.user.id, emoji).webhook()

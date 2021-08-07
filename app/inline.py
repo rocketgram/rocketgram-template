@@ -22,7 +22,7 @@ async def inline():
     kb.inline("🏞 Get some photos", switch_inline_query='#photos').row()
     kb.inline("⁉️ Ask wikipedia").row()
 
-    await SendMessage(context.message.user.user_id,
+    await SendMessage(context.user.id,
                       '🔹 Demo for inline mode.\n'
                       '\n'
                       'Photos for demo taken from this site:\n'
@@ -49,7 +49,7 @@ def inline_photo():
                                'https://telegra.ph/file/84bdc622437d376e718c5.jpg'),
     ]
 
-    AnswerInlineQuery(context.update.inline_query.query_id, photos).webhook()
+    AnswerInlineQuery(context.inline.id, photos).webhook()
 
 
 @router.handler
@@ -64,7 +64,7 @@ async def duckduckgo():
 
     params = {
         'action': 'opensearch',
-        'search': context.update.inline_query.query,
+        'search': context.inline.query,
     }
     try:
         response = await session.get('https://en.wikipedia.org/w/api.php', params=params)
@@ -82,7 +82,7 @@ async def duckduckgo():
                                                description=result[2][idx])
             articles.append(article)
 
-        AnswerInlineQuery(context.update.inline_query.query_id, articles).webhook()
+        AnswerInlineQuery(context.inline.id, articles).webhook()
     except (json.decoder.JSONDecodeError, aiohttp.ClientConnectorError):
         pass
 

@@ -16,9 +16,7 @@ async def keyboard_command():
     kb.text("😖 All bad").row()
     kb.text("/cancel")
 
-    await SendMessage(context.message.user.user_id,
-                      '🔹 How are you filling?',
-                      reply_markup=kb.render()).send()
+    await SendMessage(context.user.id, '🔹 How are you feeling?', reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -31,9 +29,7 @@ async def keyboard_location_command():
     kb.location("🗺 Send location").row()
     kb.text("/cancel")
 
-    await SendMessage(context.message.user.user_id,
-                      '🔹 Send me your location.',
-                      reply_markup=kb.render()).send()
+    await SendMessage(context.user.id, '🔹 Send me your location.', reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -42,7 +38,7 @@ async def keyboard_location_command():
 async def got_location():
     """Reaction on location"""
 
-    await SendMessage(context.message.user.user_id,
+    await SendMessage(context.user.id,
                       '🔹 Now i known where are you. 😄',
                       reply_markup=ReplyKeyboardRemove(),
                       reply_to_message_id=context.message.message_id).send()
@@ -58,9 +54,7 @@ async def keyboard_contact_command():
     kb.contact("☎️ Send contact").row()
     kb.text("/cancel")
 
-    await SendMessage(context.message.user.user_id,
-                      '🔹 Send me your contact.',
-                      reply_markup=kb.render()).send()
+    await SendMessage(context.user.id, '🔹 Send me your contact.', reply_markup=kb.render()).send()
 
 
 @router.handler
@@ -69,7 +63,7 @@ async def keyboard_contact_command():
 async def got_contact():
     """Reaction on contact"""
 
-    await SendMessage(context.message.user.user_id,
+    await SendMessage(context.user.id,
                       '🔹 Now i known your phone. 😄',
                       reply_markup=ReplyKeyboardRemove(),
                       reply_to_message_id=context.message.message_id).send()
@@ -81,6 +75,4 @@ async def got_contact():
 def cancel_command():
     """Removes current reply keyboard"""
 
-    SendMessage(context.message.user.user_id,
-                "🔹 What next?",
-                reply_markup=ReplyKeyboardRemove()).webhook()
+    SendMessage(context.user.id, "🔹 What's next?", reply_markup=ReplyKeyboardRemove()).webhook()
