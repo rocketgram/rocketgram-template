@@ -15,4 +15,4 @@ COPY app/ /opt/app/
 
 WORKDIR /opt/app
 
-CMD ["python", "/app/engine.py"]
+CMD ["python", "/opt/app/engine.py"]
