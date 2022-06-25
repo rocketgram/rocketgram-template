@@ -1,4 +1,11 @@
-﻿import logging
+﻿try:
+    import uvloop
+
+    uvloop.install()
+except ImportError:
+    pass
+
+import logging
 import os
 
 import callbacks  # noqa
@@ -46,6 +53,7 @@ def main():
                                        os.environ.get('WEBHOOK_PATH', '/').strip(),
                                        host='0.0.0.0', port=port,
                                        drop_pending_updates=bool(int(os.environ.get('DROP_UPDATES', 0))),
+                                       secret_token=True,
                                        webhook_remove=not mode == 'heroku')
 
     logger.info('Bye!')
