@@ -1,4 +1,4 @@
 munch==2.5.0
 py-enigma==0.1
 uvloop==0.16.0
-rocketgram[aiohttp,orjson]==4.0.1
+rocketgram[aiohttp,orjson]==5.0.1
