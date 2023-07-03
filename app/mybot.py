@@ -24,9 +24,6 @@ def get_bot(token: str):
 def on_init():
     """This function called when bot starts. Place here any startup code."""
 
-    print(context.bot)
-    print(context.executor)
-
     logger.info('I am starting!')
 
 
