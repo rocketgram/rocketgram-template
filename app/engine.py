@@ -26,11 +26,9 @@ logger = logging.getLogger('minibots.engine')
 
 def main():
     mode = os.environ.get('MODE')
-    if mode is None and 'DYNO' in os.environ:
-        mode = 'heroku'
 
-    if mode not in ('updates', 'webhook', 'heroku'):
-        raise TypeError('MODE must be `updates` or `webhook` or `heroku`!')
+    if mode not in ('updates', 'webhook'):
+        raise TypeError('MODE must be `updates` or `webhook`!')
 
     logging.basicConfig(format='%(asctime)s - %(levelname)-5s - %(name)-25s: %(message)s')
     logging.basicConfig(level=logging.ERROR)
