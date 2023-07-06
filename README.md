@@ -13,7 +13,7 @@ You can see working(runs in heroku) demo [here](https://t.me/RocketgramBot).
 Clone repo:
 
 ```bash
-git clone https://github.com/vd2org/rocketgram-template.git
+git clone https://github.com/rocketgram/rocketgram-template.git
 ```
 
 You need copy `app.env.template` to `app.env` and set `TOKEN`
@@ -50,20 +50,4 @@ Run everything with docker:
 
 ```bash
 docker run --env-file app.env --name rocketgram-template -d --restart unless-stopped rocketgram-template
-```
-
-### Run in Heroku
-
-Run following in console.
-Don't forget to change APP_NAME and YOUR_BOT_API_TOKEN parameters.
-
-```bash
-heroku apps:create --region eu APP_NAME
-
-heroku config:set TOKEN=YOUR_BOT_API_TOKEN
-heroku config:set WEBHOOK_URL=https://APP_NAME.herokuapp.com/
-
-git push heroku master
-
-heroku ps:scale web=1
 ```
