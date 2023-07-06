@@ -4,7 +4,7 @@ This is template repo for using to create and run your first bot with
 [Rocketgram framework](https://github.com/rocketgram/rocketgram).
 This also demonstrates how to use the framework.
 
-You can see working(runs in heroku) demo [here](https://t.me/RocketgramBot).
+You can see working demo [here](https://t.me/RocketgramBot).
 
 ## Run your first bot
 
