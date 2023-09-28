@@ -1,5 +1,5 @@
 from mybot import router
-from rocketgram import commonfilters, ChatType, SendMessage, priority, GetCustomEmojiStickers
+from rocketgram import commonfilters, ChatType, SendMessage, priority
 from rocketgram import context
 
 
@@ -18,9 +18,4 @@ async def unknown():
     You can use the @priority decorator to change it.
     """
 
-    # SendMessage(context.user.id, "🔹 I don't known what to do. May be /help?").webhook()
-
-    r = await GetCustomEmojiStickers(["5427175573497583755"]).send()
-    print(r)
-
-    await SendMessage(context.user.id, "😀😀😀").send()
+    SendMessage(context.user.id, "🔹 I don't known what to do. May be /help?").webhook()
