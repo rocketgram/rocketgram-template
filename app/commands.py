@@ -1,36 +1,41 @@
 from mybot import router
 from rocketgram import commonfilters, ChatType, SendMessage
-from rocketgram import context
+from rocketgram import context, LinkPreviewOptions
 
 
 @router.handler
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.command('/start')
 async def start_command():
-    """This is asynchronous handler. You can use here any async code."""
-    await SendMessage(context.user.id,
-                      '🔹 Hello there. This is the demo bot for Rocketgram framework.\n\n'
-                      'See source code here:\n'
-                      'github.com/rocketgram/rocketgram-template\n\n'
-                      'And Rocketgram framework source here:\n'
-                      'github.com/rocketgram/rocketgram\n\n'
-                      'You can list all commands by type /help.\n\n'
-                      'Support group: @RocketBots.',
-                      disable_web_page_preview=True).send()
+    """This is the asynchronous handler. You can use here any async code."""
+    await SendMessage(
+        context.user.id,
+        '🔹 Hello there. This is the demo bot for Rocketgram framework.\n\n'
+        'See source code here:\n'
+        'github.com/rocketgram/rocketgram-template\n\n'
+        'And Rocketgram framework source here:\n'
+        'github.com/rocketgram/rocketgram\n\n'
+        'You can list all commands by type /help.\n\n'
+        'Support group: @RocketBots.',
+        link_preview_options=LinkPreviewOptions(
+            url='https://github.com/rocketgram/rocketgram',
+            prefer_small_media=True,
+        ),
+    ).send()
 
 
 @router.handler
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.command('/help')
 def help_command():
-    """Handler can also be simple function.
+    """Handler can also be a simple function.
 
-    But remember - in async environment you shouldn't use here hard synchronous code.
+    But remember, in the async environment, you shouldn't use here hard synchronous code.
 
     This handler also demonstrates how to make webhook-request.
 
-    If you use webhook executor this will be sent as reply of received a webhook.
-    Otherwise bot's router will fallback to send by regular call."""
+    If you use the webhook executor, this will be sent as reply of received a webhook.
+    Otherwise, bot's router will fall back to send by regular call."""
 
     SendMessage(context.user.id,
                 "🔹 Bot's help.\n"

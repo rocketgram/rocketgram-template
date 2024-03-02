@@ -38,7 +38,7 @@ def on_shutdown():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.update_type(UpdateType.callback_query)
 async def before_callback_request():
-    """This is preprocessor. All preprocessors will be called for every update with callback_query."""
+    """This is the preprocessor. All preprocessors will be called for every update with callback_query."""
 
     logger.info('Got new callback from %s: `%s`', context.user.id, context.callback.data)
 
@@ -47,7 +47,7 @@ async def before_callback_request():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.update_type(UpdateType.message)
 def before_message_request():
-    """This is preprocessor. All preprocessors will be called for every update with message."""
+    """This is the preprocessor. All preprocessors will be called for every update with message."""
 
     if context.message.type == MessageType.text:
         logger.info('Got new message from %s: `%s`', context.user.id, context.message.text)

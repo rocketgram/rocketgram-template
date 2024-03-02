@@ -24,7 +24,7 @@ async def simple_inline_keyboard():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('simple')
 async def reaction_on_simple_keyboard():
-    """Reaction on simple keyboard."""
+    """Reactions on a simple keyboard."""
 
     variant = context.callback.data.split()[1]
 

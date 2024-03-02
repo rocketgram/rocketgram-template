@@ -1,10 +1,10 @@
 import json
 
 from mybot import router
-from rocketgram import ChatType, SendMessage, UpdateType, InlineKeyboard, EditMessageReplyMarkup, AnswerCallbackQuery
+from rocketgram import ChatType, SendMessage, UpdateType, InlineKeyboard, EditMessageReplyMarkup, AnswerCallbackQuery, ReplyParameters
 from rocketgram import commonfilters, commonwaiters, context
 from rocketgram import make_waiter
-from rocketgram.tools import escape
+from rocketgram.tools import parser
 
 
 @make_waiter
@@ -18,7 +18,7 @@ def next_all():
 @commonfilters.chat_type(ChatType.private)
 @commonfilters.callback('stop')
 async def stop():
-    """Shows how break existing waiter."""
+    """Shows how to break an existing waiter."""
 
     yield commonwaiters.drop_waiter()
 
@@ -55,7 +55,9 @@ async def echo():
         if not context.update.update_id % 5:
             await SendMessage(context.chat.id, "🔹 I am in <code>echo</code> mode. Hit /cancel to exit.").send()
 
-        prepared = escape.html(json.dumps(context.update.raw, ensure_ascii=False, indent=1))
-        SendMessage(context.chat.id,
-                    f"<code>{prepared}</code>",
-                    reply_to_message_id=context.message.message_id).webhook()
+        prepared = parser.escape_html(json.dumps(context.update.raw, ensure_ascii=False, indent=1))
+        SendMessage(
+            context.chat.id,
+            f"<code>{prepared}</code>",
+            reply_parameters=ReplyParameters(message_id=context.message.message_id)
+        ).webhook()

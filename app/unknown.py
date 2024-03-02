@@ -11,7 +11,7 @@ async def unknown():
     This code shows how to use the priority decorator.
 
     This handler will catch all messages to the bot, but since we set the priority
-    to 2048 the handler will be called only if no other handlers was called.
+    to 2048, the handler will be called only if no other handlers were called.
 
     The default priority in the Dispatcher is 1024.
 

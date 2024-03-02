@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+
+  template:
+    container_name: template
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ${PWD}/.data/secrets.env
+    environment:
+      - REMOTE_DEBUG=pycharm
+    extra_hosts:
+      - "api.telegram.org:149.154.167.220"
+    volumes:
+      - ${PWD}/app:/opt/app
+      - ${PWD}/../rocketgram/src/rocketgram:/opt/override/rocketgram
+    networks:
+      - service
+    restart: on-failure
+
+networks:
+  service:
+    external: true

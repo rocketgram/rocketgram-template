@@ -6,7 +6,7 @@ import aiohttp
 from mybot import router
 from rocketgram import InlineKeyboard, AnswerInlineQuery, InlineQueryResultPhoto
 from rocketgram import InlineQueryResultArticle, InputTextMessageContent
-from rocketgram import SendMessage
+from rocketgram import SendMessage, LinkPreviewOptions
 from rocketgram import commonfilters, ChatType, UpdateType, priority
 from rocketgram import context
 
@@ -20,21 +20,26 @@ async def inline():
     kb = InlineKeyboard()
 
     kb.inline("🏞 Get some photos", switch_inline_query='#photos').row()
-    kb.inline("⁉️ Ask wikipedia").row()
+    kb.inline("⁉️ Ask wikipedia", switch_inline_query="").row()
 
-    await SendMessage(context.user.id,
-                      '🔹 Demo for inline mode.\n'
-                      '\n'
-                      'Photos for demo taken from this site:\n'
-                      'https://unsplash.com/creative-commons-images',
-                      reply_markup=kb.render(), disable_web_page_preview=True).send()
+    await SendMessage(
+        context.user.id,
+        '🔹 Demo for inline mode.\n'
+        '\n'
+        'Photos for demo taken from this site:\n'
+        'https://unsplash.com/creative-commons-images',
+        link_preview_options=LinkPreviewOptions(
+            is_disabled=True,
+        ),
+        reply_markup=kb.render(),
+    ).send()
 
 
 @router.handler
 @commonfilters.update_type(UpdateType.inline_query)
 @commonfilters.inline('#photo')
 def inline_photo():
-    """Shows how to send photo though inline."""
+    """Shows how to send a photo though inline."""
 
     photos = [
         InlineQueryResultPhoto('1', 'https://telegra.ph/file/a225c61d9354bb0fc1241.jpg',
@@ -58,7 +63,7 @@ def inline_photo():
 async def duckduckgo():
     """Produces simple wikipedia search."""
 
-    # This is little hack to avoid create own aiohttp session
+    # This is a little hack to avoid create own aiohttp session
     # never don't do like this ;)
     session: aiohttp.ClientSession = context.bot.connector._session
 
@@ -76,10 +81,12 @@ async def duckduckgo():
             text = f"{result[2][idx]}\n\n{result[3][idx]}"
             text_hash = md5(text.encode()).hexdigest()
 
-            article = InlineQueryResultArticle(id=text_hash,
-                                               title=result[1][idx],
-                                               input_message_content=InputTextMessageContent(message_text=text),
-                                               description=result[2][idx])
+            article = InlineQueryResultArticle(
+                id=text_hash,
+                title=result[1][idx],
+                input_message_content=InputTextMessageContent(message_text=text),
+                description=result[2][idx]
+            )
             articles.append(article)
 
         AnswerInlineQuery(context.inline.id, articles).webhook()

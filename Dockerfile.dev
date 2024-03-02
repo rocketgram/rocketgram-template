@@ -1,0 +1,24 @@
+FROM python:3.10
+
+RUN pip install watchdog[watchmedo] --no-cache-dir -q --compile
+RUN pip install pip install pydevd-pycharm~=233.14475.56 --no-cache-dir -q --compile
+
+COPY requirements.txt /requirements.txt
+
+RUN pip install -r /requirements.txt --no-cache-dir -q --compile
+
+RUN mkdir -p /opt/app /opt/override
+
+WORKDIR /opt/app
+
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONHASHSEED=random
+ENV PYTHONDONTWRITEBYTECODE=1
+
+ENV PYTHONPATH=/opt/override
+
+ENV WEBHOOK_PORT=8080
+EXPOSE 8080
+
+ENTRYPOINT ["watchmedo", "auto-restart", "-d", "/opt/app", "-d", "/opt/override", "-p", "*.py", "-R", "--signal", "SIGKILL", "--"]
+CMD ["python", "/opt/app/engine.py"]

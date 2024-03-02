@@ -1,5 +1,5 @@
 from mybot import router
-from rocketgram import MessageType, ReplyKeyboard, ReplyKeyboardRemove
+from rocketgram import MessageType, ReplyKeyboard, ReplyKeyboardRemove, ReplyParameters
 from rocketgram import context, commonfilters, ChatType, SendMessage
 
 
@@ -38,10 +38,12 @@ async def keyboard_location_command():
 async def got_location():
     """Reaction on location"""
 
-    await SendMessage(context.user.id,
-                      '🔹 Now i known where are you. 😄',
-                      reply_markup=ReplyKeyboardRemove(),
-                      reply_to_message_id=context.message.message_id).send()
+    await SendMessage(
+        context.user.id,
+        '🔹 Now i known where are you. 😄',
+        reply_markup=ReplyKeyboardRemove(),
+        reply_parameters=ReplyParameters(message_id=context.message.message_id),
+    ).send()
 
 
 @router.handler
@@ -63,10 +65,12 @@ async def keyboard_contact_command():
 async def got_contact():
     """Reaction on contact"""
 
-    await SendMessage(context.user.id,
-                      '🔹 Now i known your phone. 😄',
-                      reply_markup=ReplyKeyboardRemove(),
-                      reply_to_message_id=context.message.message_id).send()
+    await SendMessage(
+        context.user.id,
+        '🔹 Now i known your phone. 😄',
+        reply_markup=ReplyKeyboardRemove(),
+        reply_parameters=ReplyParameters(message_id=context.message.message_id)
+    ).send()
 
 
 @router.handler

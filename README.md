@@ -1,6 +1,6 @@
 # Template of bot with Rocketgram
 
-This is template repo for using to create and run your first bot with
+This is the template repo for using to create and run your first bot with
 [Rocketgram framework](https://github.com/rocketgram/rocketgram).
 This also demonstrates how to use the framework.
 
@@ -18,7 +18,7 @@ git clone https://github.com/rocketgram/rocketgram-template.git
 
 You need copy `app.env.template` to `app.env` and set `TOKEN`
 parameter to token taken from [BotFather](https://t.me/BotFather).
-Then you can run bot with one of following method.
+Then you can run bot with one of the following methods.
 
 ### Run with venv
 
