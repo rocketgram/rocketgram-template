@@ -1,3 +1,4 @@
+import rocketgram
 from mybot import router
 from rocketgram import commonfilters, ChatType, SendMessage
 from rocketgram import context, LinkPreviewOptions
@@ -11,6 +12,7 @@ async def start_command():
     await SendMessage(
         context.user.id,
         '🔹 Hello there. This is the demo bot for Rocketgram framework.\n\n'
+        f'Rocketgram version: {rocketgram.version()}\n\n'
         'See source code here:\n'
         'github.com/rocketgram/rocketgram-template\n\n'
         'And Rocketgram framework source here:\n'
